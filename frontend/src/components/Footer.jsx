@@ -7,7 +7,7 @@ export default function Footer() {
             <div className="footer-container container">
                 <div className="footer-grid">
                     <div className="footer-brand">
-                        <h3 className="footer-title">Prestige University</h3>
+                        <h3 className="footer-title">Vel Tech University</h3>
                         <p className="footer-desc">
                             Empowering minds, shaping futures. Committed to academic excellence
                             and innovative research since 1985.
@@ -43,7 +43,7 @@ export default function Footer() {
                         <ul className="contact-list">
                             <li>
                                 <span className="contact-icon">📧</span>
-                                <span>info@prestige.edu</span>
+                                <span>info@veltech.edu</span>
                             </li>
                             <li>
                                 <span className="contact-icon">📞</span>
@@ -58,7 +58,7 @@ export default function Footer() {
                 </div>
 
                 <div className="footer-bottom">
-                    <p>&copy; {new Date().getFullYear()} Prestige University. All rights reserved.</p>
+                    <p>&copy; {new Date().getFullYear()} Vel Tech University. All rights reserved.</p>
                 </div>
             </div>
         </footer>

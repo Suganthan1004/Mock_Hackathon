@@ -1,61 +1,20 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { universityAPI } from '../services/api';
 import './Home.css';
 
-const mockEvents = [
-    {
-        id: 1,
-        title: 'Annual Tech Symposium 2026',
-        description: 'Join us for three days of cutting-edge technology presentations, workshops, and networking with industry leaders.',
-        date: '2026-03-15',
-        category: 'upcoming',
-        tag: 'Technology',
-    },
-    {
-        id: 2,
-        title: 'International Research Conference',
-        description: 'Present your research papers and collaborate with scholars from across the globe in our annual conference.',
-        date: '2026-04-20',
-        category: 'upcoming',
-        tag: 'Research',
-    },
-    {
-        id: 3,
-        title: 'Spring Semester Hackathon',
-        description: '48-hour coding challenge to build innovative solutions. Open to all departments. Amazing prizes to win!',
-        date: '2026-03-01',
-        category: 'ongoing',
-        tag: 'Hackathon',
-    },
-    {
-        id: 4,
-        title: 'Cultural Fest – Harmony 2026',
-        description: 'A celebration of arts, music, and diversity. Featuring performances, exhibitions, and food stalls.',
-        date: '2026-04-05',
-        category: 'upcoming',
-        tag: 'Culture',
-    },
+// Fallback mock data if backend is unavailable
+const fallbackEvents = [
+    { id: 1, title: 'Annual Tech Symposium 2026', description: 'Join us for three days of cutting-edge technology presentations, workshops, and networking with industry leaders.', date: '2026-03-15', category: 'upcoming', tag: 'Technology' },
+    { id: 2, title: 'International Research Conference', description: 'Present your research papers and collaborate with scholars from across the globe.', date: '2026-04-20', category: 'upcoming', tag: 'Research' },
+    { id: 3, title: 'Spring Semester Hackathon', description: '48-hour coding challenge to build innovative solutions. Open to all departments.', date: '2026-03-01', category: 'ongoing', tag: 'Hackathon' },
+    { id: 4, title: 'Cultural Fest – Harmony 2026', description: 'A celebration of arts, music, and diversity. Performances, exhibitions, and food stalls.', date: '2026-04-05', category: 'upcoming', tag: 'Culture' },
 ];
 
-const mockNews = [
-    {
-        id: 1,
-        title: 'University Ranked #5 Nationally',
-        description: 'Prestige University climbs to 5th position in the national university rankings for academic excellence.',
-        date: '2026-02-10',
-    },
-    {
-        id: 2,
-        title: 'New AI Research Lab Inaugurated',
-        description: 'State-of-the-art AI and Machine Learning research lab now open for students and faculty.',
-        date: '2026-02-08',
-    },
-    {
-        id: 3,
-        title: 'Placement Record: 95% Students Placed',
-        description: 'This year\'s placement drive achieves a record 95% placement rate with top companies.',
-        date: '2026-02-05',
-    },
+const fallbackNews = [
+    { id: 1, title: 'University Ranked #5 Nationally', description: 'Vel Tech University climbs to 5th position in national rankings.', date: '2026-02-10' },
+    { id: 2, title: 'New AI Research Lab Inaugurated', description: 'State-of-the-art AI and Machine Learning research lab now open.', date: '2026-02-08' },
+    { id: 3, title: 'Placement Record: 95% Students Placed', description: 'This year\'s placement drive achieves a record 95% placement rate.', date: '2026-02-05' },
 ];
 
 const announcements = [
@@ -68,6 +27,20 @@ const announcements = [
 export default function Home() {
     const [activeTab, setActiveTab] = useState('upcoming');
     const [currentAnnouncement, setCurrentAnnouncement] = useState(0);
+    const [events, setEvents] = useState(fallbackEvents);
+    const [news, setNews] = useState(fallbackNews);
+
+    useEffect(() => {
+        // GET /api/university/events
+        universityAPI.getEvents()
+            .then((res) => {
+                if (res.data?.events) setEvents(res.data.events);
+                if (res.data?.news) setNews(res.data.news);
+            })
+            .catch(() => {
+                // Use fallback data
+            });
+    }, []);
 
     useEffect(() => {
         const interval = setInterval(() => {
@@ -76,7 +49,7 @@ export default function Home() {
         return () => clearInterval(interval);
     }, []);
 
-    const filteredEvents = mockEvents.filter((e) => e.category === activeTab);
+    const filteredEvents = events.filter((e) => e.category === activeTab);
 
     return (
         <div className="home">
@@ -86,7 +59,7 @@ export default function Home() {
                 <div className="hero-content container">
                     <div className="hero-text animate-fade-in-up">
                         <span className="hero-badge">🏛️ Welcome to</span>
-                        <h1 className="hero-title">Prestige University</h1>
+                        <h1 className="hero-title">Vel Tech University</h1>
                         <p className="hero-subtitle">
                             Empowering the next generation of leaders through world-class education,
                             groundbreaking research, and innovative thinking.
@@ -139,42 +112,22 @@ export default function Home() {
                     <p className="section-subtitle">Stay updated with what's happening around campus</p>
 
                     <div className="event-tabs">
-                        <button
-                            className={`event-tab ${activeTab === 'upcoming' ? 'active' : ''}`}
-                            onClick={() => setActiveTab('upcoming')}
-                        >
-                            Upcoming Events
-                        </button>
-                        <button
-                            className={`event-tab ${activeTab === 'ongoing' ? 'active' : ''}`}
-                            onClick={() => setActiveTab('ongoing')}
-                        >
-                            Ongoing Events
-                        </button>
+                        <button className={`event-tab ${activeTab === 'upcoming' ? 'active' : ''}`} onClick={() => setActiveTab('upcoming')}>Upcoming Events</button>
+                        <button className={`event-tab ${activeTab === 'ongoing' ? 'active' : ''}`} onClick={() => setActiveTab('ongoing')}>Ongoing Events</button>
                     </div>
 
                     <div className="events-grid">
                         {filteredEvents.map((event, index) => (
-                            <div
-                                className="event-card glass-card animate-fade-in-up"
-                                key={event.id}
-                                style={{ animationDelay: `${index * 0.1}s` }}
-                            >
+                            <div className="event-card glass-card animate-fade-in-up" key={event.id} style={{ animationDelay: `${index * 0.1}s` }}>
                                 <div className="event-card-top">
                                     <span className="event-tag">{event.tag}</span>
                                     <span className="event-date">
-                                        {new Date(event.date).toLocaleDateString('en-US', {
-                                            month: 'short',
-                                            day: 'numeric',
-                                            year: 'numeric',
-                                        })}
+                                        {new Date(event.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
                                     </span>
                                 </div>
                                 <h3 className="event-title">{event.title}</h3>
                                 <p className="event-desc">{event.description}</p>
-                                <button className="btn btn-secondary" style={{ marginTop: 'auto', width: '100%' }}>
-                                    Learn More →
-                                </button>
+                                <button className="btn btn-secondary" style={{ marginTop: 'auto', width: '100%' }}>Learn More →</button>
                             </div>
                         ))}
                     </div>
@@ -185,23 +138,15 @@ export default function Home() {
             <section className="section news-section">
                 <div className="container">
                     <h2 className="section-title">Latest News</h2>
-                    <p className="section-subtitle">What's new at Prestige University</p>
-
+                    <p className="section-subtitle">What's new at Vel Tech University</p>
                     <div className="news-grid">
-                        {mockNews.map((news, index) => (
-                            <div
-                                className="news-card glass-card animate-fade-in-up"
-                                key={news.id}
-                                style={{ animationDelay: `${index * 0.1}s` }}
-                            >
+                        {news.map((item, index) => (
+                            <div className="news-card glass-card animate-fade-in-up" key={item.id} style={{ animationDelay: `${index * 0.1}s` }}>
                                 <div className="news-date">
-                                    {new Date(news.date).toLocaleDateString('en-US', {
-                                        month: 'short',
-                                        day: 'numeric',
-                                    })}
+                                    {new Date(item.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
                                 </div>
-                                <h3 className="news-title">{news.title}</h3>
-                                <p className="news-desc">{news.description}</p>
+                                <h3 className="news-title">{item.title}</h3>
+                                <p className="news-desc">{item.description}</p>
                             </div>
                         ))}
                     </div>
@@ -212,7 +157,7 @@ export default function Home() {
             <section className="cta-section">
                 <div className="container cta-content">
                     <h2>Ready to Begin Your Journey?</h2>
-                    <p>Join thousands of students who are shaping their future at Prestige University</p>
+                    <p>Join thousands of students who are shaping their future at Vel Tech University</p>
                     <div className="cta-actions">
                         <Link to="/courses" className="btn btn-primary">Explore Courses</Link>
                         <Link to="/about" className="btn btn-secondary">Learn More</Link>
