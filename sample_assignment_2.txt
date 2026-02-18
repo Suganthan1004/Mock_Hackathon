@@ -1,0 +1,83 @@
+Assignment: ER Diagram Design
+Course: CS202 - Database Management
+Student: Arjun Sharma (STU001)
+Date: February 16, 2026
+
+1. Introduction
+
+This assignment presents the design of an Entity-Relationship (ER) diagram for a University Management System. The system manages students, faculty, courses, departments, and enrollments. The goal is to create a normalized database schema that supports the core operations of a university.
+
+2. Entities Identified
+
+2.1 Student
+- StudentID (Primary Key)
+- Name
+- Email
+- Phone
+- DateOfBirth
+- Address
+- EnrollmentDate
+- DepartmentID (Foreign Key)
+
+2.2 Faculty
+- FacultyID (Primary Key)
+- Name
+- Email
+- Phone
+- Specialization
+- JoiningDate
+- DepartmentID (Foreign Key)
+
+2.3 Course
+- CourseID (Primary Key)
+- CourseName
+- Credits
+- Semester
+- DepartmentID (Foreign Key)
+
+2.4 Department
+- DepartmentID (Primary Key)
+- DepartmentName
+- HOD_FacultyID (Foreign Key)
+- Building
+- Phone
+
+2.5 Enrollment
+- EnrollmentID (Primary Key)
+- StudentID (Foreign Key)
+- CourseID (Foreign Key)
+- Semester
+- Grade
+- EnrollmentDate
+
+3. Relationships
+
+- A Student BELONGS TO one Department (Many-to-One)
+- A Faculty BELONGS TO one Department (Many-to-One)
+- A Course is OFFERED BY one Department (Many-to-One)
+- A Student ENROLLS IN many Courses through Enrollment (Many-to-Many)
+- A Faculty TEACHES many Courses (One-to-Many)
+- A Department is HEADED BY one Faculty (One-to-One)
+
+4. Cardinality Summary
+
+| Relationship | Type | Description |
+|-------------|------|-------------|
+| Student - Department | M:1 | Many students in one department |
+| Faculty - Department | M:1 | Many faculty in one department |
+| Student - Course | M:N | Via Enrollment table |
+| Faculty - Course | 1:M | One faculty teaches many courses |
+| Department - HOD | 1:1 | One head per department |
+
+5. Normalization
+
+The schema is in Third Normal Form (3NF):
+- 1NF: All attributes are atomic, no repeating groups
+- 2NF: All non-key attributes fully depend on the primary key
+- 3NF: No transitive dependencies exist
+
+6. Conclusion
+
+The ER diagram successfully models the core entities and relationships of a university management system. The design supports student enrollment tracking, course management, faculty assignments, and departmental organization. The schema is normalized to 3NF to minimize data redundancy and ensure data integrity.
+
+Future enhancements could include adding entities for Examination, Library, and Fee Management modules.
