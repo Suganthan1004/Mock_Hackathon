@@ -1,6 +1,6 @@
 # Vel Tech University Portal — Project Documentation
 
-> **Team:** TapAcademy | **Date:** February 2026 | **Type:** Full-Stack Web Application
+> **Date:** February 2026 | **Type:** Full-Stack Web Application
 
 ---
 
