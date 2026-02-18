@@ -215,7 +215,7 @@ export default function AdminDashboard() {
                             {(() => {
                                 const data = activeTab === 'events' ? events :
                                     activeTab === 'news' ? news :
-                                        activeTab === 'users' ? users : courses;
+                                        activeTab === 'users' ? users.filter(u => u.role !== 'ADMIN') : courses;
 
                                 if (data.length === 0) {
                                     return (
@@ -280,7 +280,7 @@ export default function AdminDashboard() {
                 <div className="modal-overlay" onClick={closeModal}>
                     <div className="modal-content" onClick={(e) => e.stopPropagation()}>
                         <div className="modal-header">
-                            <h3>{editingItem ? 'Edit' : 'Create'} {activeTab === 'events' ? 'Event' : 'News'}</h3>
+                            <h3>{editingItem ? 'Edit' : 'Create'} {activeTab === 'events' ? 'Event' : activeTab === 'news' ? 'News' : activeTab === 'users' ? 'User' : 'Course'}</h3>
                             <button className="modal-close" onClick={closeModal}>✕</button>
                         </div>
                         <form onSubmit={handleSubmit} className="modal-form">
@@ -376,7 +376,6 @@ export default function AdminDashboard() {
                                             <select name="role" className="form-input" value={formData.role || 'STUDENT'} onChange={handleChange}>
                                                 <option value="STUDENT">Student</option>
                                                 <option value="FACULTY">Faculty</option>
-                                                <option value="ADMIN">Admin</option>
                                             </select>
                                         </div>
                                     </div>

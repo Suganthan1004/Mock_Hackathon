@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
-import { courseAPI, attendanceAPI } from '../services/api';
+import { useAuth } from '../context/AuthContext';
+import { dashboardAPI, attendanceAPI } from '../services/api';
 import Sidebar from '../components/Sidebar';
 import './Dashboard.css';
 
@@ -42,18 +43,25 @@ const fallbackReportData = [
 ];
 
 export default function AttendanceReport() {
+    const { user } = useAuth();
     const [courses, setCourses] = useState([]);
     const [filterCourse, setFilterCourse] = useState('');
     const [filterDate, setFilterDate] = useState('');
     const [reports, setReports] = useState(fallbackReportData);
     const [loading, setLoading] = useState(false);
 
-    // Fetch courses for filter dropdown
+    // Fetch only courses taught by this faculty
     useEffect(() => {
-        courseAPI.getAll()
-            .then((res) => {
-                if (res.data && Array.isArray(res.data)) {
-                    setCourses(res.data.map(c => ({ id: c.courseId || c.id, name: c.name || c.courseName })));
+        if (!user?.id) return;
+        dashboardAPI.getFaculty(user.id)
+            .then(res => {
+                const c = res.data?.courses || [];
+                if (c.length > 0) {
+                    const mapped = c.map(course => ({
+                        id: course.courseId,
+                        name: course.courseName || course.name
+                    }));
+                    setCourses(mapped);
                 }
             })
             .catch(() => {
@@ -63,7 +71,7 @@ export default function AttendanceReport() {
                     { id: 'CS301', name: 'Machine Learning' },
                 ]);
             });
-    }, []);
+    }, [user]);
 
     // Fetch attendance when filters change
     useEffect(() => {
@@ -90,9 +98,11 @@ export default function AttendanceReport() {
                         return;
                     }
                 }
-                throw new Error('fallback');
+                // If neither branch returned data, show empty
+                setReports([]);
+                setLoading(false);
             } catch {
-                // Use fallback filtered client-side
+                // Only use fallback on genuine API failures
                 setReports(fallbackReportData);
                 setLoading(false);
             }

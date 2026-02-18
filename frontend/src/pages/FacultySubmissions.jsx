@@ -89,7 +89,7 @@ export default function FacultySubmissions() {
         facultyAPI.getSubmissions(selectedCourse)
             .then((res) => {
                 const s = res.data || [];
-                setSubmissions(s.length > 0 ? s : fallbackSubmissions);
+                setSubmissions(s);
             })
             .catch(() => setSubmissions(fallbackSubmissions))
             .finally(() => setSubsLoading(false));
