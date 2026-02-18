@@ -40,23 +40,35 @@ export default function AssignmentSubmission() {
 
     const [submissions, setSubmissions] = useState([]);
 
+    // Read pre-fill state from navigation
+    const location = useLocation();
+    const prefillCourseId = location.state?.courseId || '';
+    const prefillAssignmentId = location.state?.assignmentId || '';
+    const [prefillApplied, setPrefillApplied] = useState(false);
+
     // Fetch courses and student submissions
     useEffect(() => {
+        const studentId = user?.studentId || user?.id;
         // Fetch courses
         courseAPI.getAll()
             .then((res) => {
                 if (res.data && Array.isArray(res.data)) {
-                    setCourses(res.data.map(c => ({ id: c.courseId || c.id, name: c.name || c.courseName })));
+                    const mapped = res.data.map(c => ({ id: c.courseId || c.id, name: c.name || c.courseName }));
+                    setCourses(mapped);
                 }
             })
-            .catch(() => { /* use fallback */ });
+            .catch(() => { /* use fallback */ })
+            .finally(() => {
+                // Auto-fill course from navigation state after courses load
+                if (prefillCourseId && !prefillApplied) {
+                    handleCourseChange(prefillCourseId);
+                    setPrefillApplied(true);
+                }
+            });
 
         // Fetch student submissions
-        const studentId = user?.id; // Assuming user.id corresponds to studentId or we use 'STU001' as fallback
-        if (studentId || true) { // Always fetch for now with fallback ID if needed
-            // In real app, use actual ID. For now, use 'STU001' as consistent with other parts if user.id missing
-            const sid = studentId || 'STU001';
-            assignmentAPI.getByStudent(sid)
+        if (studentId) {
+            assignmentAPI.getByStudent(studentId)
                 .then(res => {
                     if (res.data) setSubmissions(res.data);
                 })
@@ -93,6 +105,16 @@ export default function AssignmentSubmission() {
         }
     };
 
+    // Auto-select assignment when assignments load and prefill is set
+    useEffect(() => {
+        if (prefillAssignmentId && assignments.length > 0) {
+            const match = assignments.find(a => String(a.id) === String(prefillAssignmentId));
+            if (match) {
+                setSelectedAssignment(String(match.id));
+            }
+        }
+    }, [assignments, prefillAssignmentId]);
+
     const handleFileChange = (e) => {
         const selected = e.target.files[0];
         if (selected) setFile(selected);
@@ -126,7 +148,7 @@ export default function AssignmentSubmission() {
             formData.append('file', file);
             formData.append('courseId', selectedCourse);
             formData.append('assignmentId', selectedAssignment);
-            formData.append('studentId', user?.id || 'STU001');
+            formData.append('studentId', user?.studentId || user?.id || 'STU001');
 
             const res = await assignmentAPI.upload(formData);
 

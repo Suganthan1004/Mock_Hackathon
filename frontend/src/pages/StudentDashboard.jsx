@@ -31,19 +31,20 @@ export default function StudentDashboard() {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        if (!user?.id) { setLoading(false); return; }
+        const studentId = user?.studentId || user?.id;
+        if (!studentId) { setLoading(false); return; }
 
         const fetchData = async () => {
             try {
                 // GET /api/dashboard/student/{studentId}
-                const dashRes = await dashboardAPI.getStudent(user.id);
+                const dashRes = await dashboardAPI.getStudent(studentId);
                 if (dashRes.data) setDashData(dashRes.data);
             } catch { /* use fallback */ }
 
             try {
                 // GET /api/assignments/student/{studentId}
-                const assignRes = await assignmentAPI.getByStudent(user.id);
-                if (assignRes.data && Array.isArray(assignRes.data)) {
+                const assignRes = await assignmentAPI.getByStudent(studentId);
+                if (assignRes.data && Array.isArray(assignRes.data) && assignRes.data.length > 0) {
                     setAssignments(assignRes.data);
                 }
             } catch { /* use fallback */ }
@@ -133,11 +134,13 @@ export default function StudentDashboard() {
                                         const today = new Date();
                                         today.setHours(0, 0, 0, 0);
                                         const isLate = dueDate && today > dueDate;
+                                        const displayTitle = a.title || a.assignmentTitle || 'Untitled';
+                                        const displayCourse = a.course || a.courseId || '—';
 
                                         return (
                                             <tr key={a.id}>
-                                                <td><strong>{a.title}</strong></td>
-                                                <td>{a.course || a.courseId}</td>
+                                                <td><strong>{displayTitle}</strong></td>
+                                                <td>{displayCourse}</td>
                                                 <td>{dueDate ? dueDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : '—'}</td>
                                                 <td><span className={`badge ${st.class}`}>{st.label}</span></td>
                                                 <td style={{ fontSize: '0.85rem' }}>{a.fileName ? a.fileName : <span style={{ color: 'var(--light-gray)' }}>—</span>}</td>
@@ -146,7 +149,7 @@ export default function StudentDashboard() {
                                                     {(a.status || '').toLowerCase() === 'pending' ? (
                                                         <Link
                                                             to="/student/assignments"
-                                                            state={{ courseId: a.course || a.courseId, assignmentId: a.assignmentId || a.id }}
+                                                            state={{ courseId: displayCourse, assignmentId: a.assignmentId || a.id }}
                                                             className="btn btn-accent"
                                                             style={{ padding: '6px 14px', fontSize: '0.8rem' }}
                                                         >
@@ -158,7 +161,7 @@ export default function StudentDashboard() {
                                                         !isLate ? (
                                                             <Link
                                                                 to="/student/assignments"
-                                                                state={{ courseId: a.course || a.courseId, assignmentId: a.assignmentId || a.id }}
+                                                                state={{ courseId: displayCourse, assignmentId: a.assignmentId || a.id }}
                                                                 className="btn btn-primary"
                                                                 style={{ padding: '6px 14px', fontSize: '0.8rem', background: 'transparent', border: '1px solid var(--primary-color)', color: 'var(--primary-color)' }}
                                                             >

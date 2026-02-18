@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
-import { courseAPI, attendanceAPI } from '../services/api';
+import { dashboardAPI, attendanceAPI } from '../services/api';
 import Sidebar from '../components/Sidebar';
 import { FiCheckSquare, FiCheckCircle, FiClock, FiSave } from 'react-icons/fi';
 import './Dashboard.css';
@@ -50,16 +50,21 @@ export default function AttendanceMarking() {
     const [submitted, setSubmitted] = useState(false);
     const [submitting, setSubmitting] = useState(false);
 
-    // Fetch courses on mount
+    // Fetch only courses taught by this faculty
     useEffect(() => {
-        courseAPI.getAll()
-            .then((res) => {
-                if (res.data && Array.isArray(res.data)) {
-                    setCourses(res.data.map(c => ({ id: c.courseId || c.id, name: c.name || c.courseName })));
+        if (!user?.id) return;
+        dashboardAPI.getFaculty(user.id)
+            .then(res => {
+                const c = res.data?.courses || [];
+                if (c.length > 0) {
+                    setCourses(c.map(course => ({
+                        id: course.courseId,
+                        name: course.courseName || course.name
+                    })));
                 }
             })
-            .catch(() => { /* use fallback */ });
-    }, []);
+            .catch(() => { /* keep fallback courses */ });
+    }, [user]);
 
     // Fetch students when course is selected
     const handleCourseChange = async (courseId) => {

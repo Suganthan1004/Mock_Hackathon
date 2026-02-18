@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { assignmentAPI } from '../services/api';
 import Sidebar from '../components/Sidebar';
-import { FiFileText, FiSearch, FiChevronDown, FiChevronUp, FiFile, FiUpload, FiDownload } from 'react-icons/fi';
+import { FiFileText, FiSearch, FiChevronDown, FiChevronUp, FiFile, FiUpload, FiEye } from 'react-icons/fi';
 import './Dashboard.css';
 
 const statusMap = {
@@ -33,8 +33,9 @@ export default function StudentAssignments() {
     const [expandedId, setExpandedId] = useState(null);
 
     useEffect(() => {
-        if (!user?.id) { setLoading(false); return; }
-        assignmentAPI.getByStudent(user.id)
+        const studentId = user?.studentId || user?.id;
+        if (!studentId) { setLoading(false); return; }
+        assignmentAPI.getByStudent(studentId)
             .then(res => {
                 if (res.data && Array.isArray(res.data) && res.data.length > 0) {
                     setAssignments(res.data);
@@ -137,7 +138,7 @@ export default function StudentAssignments() {
                                                     <td style={{ textAlign: 'center', verticalAlign: 'middle' }}>
                                                         {hasFile ? (isExpanded ? <FiChevronUp size={16} /> : <FiChevronDown size={16} />) : ''}
                                                     </td>
-                                                    <td><strong>{a.title}</strong></td>
+                                                    <td><strong>{a.title || a.assignmentTitle || 'Untitled'}</strong></td>
                                                     <td>{a.course || a.courseId}</td>
                                                     <td>{dueDate ? dueDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : '—'}</td>
                                                     <td><span className={`badge ${st.class}`}>{st.label}</span></td>
@@ -203,21 +204,17 @@ export default function StudentAssignments() {
                                                                     </div>
                                                                 )}
                                                                 <div style={{ marginLeft: 'auto', display: 'flex', gap: 10, flexWrap: 'wrap' }}>
-                                                                    {/* Download button */}
-                                                                    <a
-                                                                        href={a.filePath || '#'}
-                                                                        download={a.fileName || 'submission'}
+                                                                    {/* View button - shows file info */}
+                                                                    <button
                                                                         className="btn btn-secondary"
                                                                         style={{ padding: '8px 18px', fontSize: '0.85rem' }}
                                                                         onClick={(e) => {
-                                                                            if (!a.filePath) {
-                                                                                e.preventDefault();
-                                                                                alert('Download not available for this file.');
-                                                                            }
+                                                                            e.stopPropagation();
+                                                                            alert(`📄 File: ${a.fileName || a.filePath?.split('/').pop()}\n📅 Submitted: ${a.submittedAt ? new Date(a.submittedAt).toLocaleString() : 'N/A'}\n📊 Score: ${a.score != null ? a.score + '%' : 'Pending'}\n\nFile is stored on the server and can be viewed by your instructor.`);
                                                                         }}
                                                                     >
-                                                                        <FiDownload size={14} style={{ marginRight: 5 }} /> Download
-                                                                    </a>
+                                                                        <FiEye size={14} style={{ marginRight: 5 }} /> View Details
+                                                                    </button>
                                                                     {/* Upload new file button (only if not late and submitted) */}
                                                                     {statusLower === 'submitted' && !isLate && (
                                                                         <button onClick={() => handleAction(a)} className="btn btn-accent" style={{ padding: '8px 18px', fontSize: '0.85rem' }}>
