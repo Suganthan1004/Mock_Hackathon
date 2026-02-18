@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
@@ -14,6 +14,16 @@ export default function Navbar() {
     const { user, logout } = useAuth();
     const { theme, toggleTheme } = useTheme();
     const location = useLocation();
+    const toggleBtnRef = useRef(null);
+
+    const handleToggleTheme = () => {
+        const btn = toggleBtnRef.current;
+        if (btn) {
+            btn.classList.add('spin');
+            setTimeout(() => btn.classList.remove('spin'), 500);
+        }
+        toggleTheme();
+    };
 
     const isActive = (path) => location.pathname === path;
 
@@ -116,8 +126,9 @@ export default function Navbar() {
                     </ul>
 
                     <button
+                        ref={toggleBtnRef}
                         className="theme-toggle"
-                        onClick={toggleTheme}
+                        onClick={handleToggleTheme}
                         aria-label="Toggle theme"
                         title={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
                     >
