@@ -1,0 +1,55 @@
+Assignment: Lab 1 - Linked Lists
+Course: CS201 - Data Structures
+Student: Arjun Sharma (STU001)
+Date: February 16, 2026
+
+1. Introduction
+
+A linked list is a linear data structure where each element (called a node) contains a data field and a reference (pointer) to the next node in the sequence. Unlike arrays, linked lists do not store elements in contiguous memory locations, which allows for efficient insertion and deletion operations.
+
+In this lab, I implemented both singly and doubly linked lists in Java, with full support for insert, delete, and search operations.
+
+2. Singly Linked List Implementation
+
+A singly linked list consists of nodes where each node has a data part and a pointer to the next node. The last node points to null.
+
+Operations implemented:
+- insertAtHead(data): Inserts a new node at the beginning. Time complexity: O(1)
+- insertAtTail(data): Inserts a new node at the end. Time complexity: O(n)
+- insertAtPosition(data, pos): Inserts at a specific position. Time complexity: O(n)
+- deleteByValue(data): Removes the first occurrence of a value. Time complexity: O(n)
+- search(data): Returns true if value exists. Time complexity: O(n)
+- display(): Prints all elements. Time complexity: O(n)
+
+The singly linked list uses O(n) space where n is the number of elements.
+
+3. Doubly Linked List Implementation
+
+A doubly linked list extends the singly linked list by adding a pointer to the previous node. This allows traversal in both directions.
+
+Additional operations:
+- insertBefore(node, data): Insert before a given node. Time complexity: O(1) if node reference is given
+- deleteNode(node): Delete a specific node. Time complexity: O(1) if node reference is given
+- reverseTraversal(): Print list from tail to head. Time complexity: O(n)
+
+The doubly linked list uses slightly more memory (O(n) extra for prev pointers) but provides O(1) deletion when the node reference is available.
+
+4. Testing and Results
+
+I tested both implementations with the following test cases:
+- Inserting 10 elements and verifying order
+- Deleting head, tail, and middle elements
+- Searching for existing and non-existing elements
+- Edge cases: empty list operations, single element list
+
+All test cases passed successfully.
+
+5. Conclusion
+
+Linked lists are fundamental data structures that provide dynamic memory allocation and efficient insertions/deletions compared to arrays. The singly linked list is simpler and uses less memory, while the doubly linked list offers more flexibility with bidirectional traversal and O(1) deletion.
+
+Through this lab, I gained a deeper understanding of pointer manipulation, memory management, and the trade-offs between different data structure implementations.
+
+References:
+- Cormen, T.H., et al. "Introduction to Algorithms", 3rd Edition
+- GeeksforGeeks - Linked List Data Structure
