@@ -51,7 +51,10 @@ export default function FacultyDashboard() {
                         <h1>Welcome, {user?.name?.split(' ').slice(0, 2).join(' ')}! 👋</h1>
                         <p className="dashboard-subtitle">Faculty Dashboard — {user?.department}</p>
                     </div>
-                    <Link to="/faculty/attendance" className="btn btn-primary">✅ Mark Attendance</Link>
+                    <div style={{ display: 'flex', gap: '0.75rem' }}>
+                        <Link to="/faculty/submissions" className="btn btn-secondary">📝 View Submissions</Link>
+                        <Link to="/faculty/attendance" className="btn btn-primary">✅ Mark Attendance</Link>
+                    </div>
                 </div>
 
                 {/* Stats */}

@@ -12,6 +12,7 @@ export default function Sidebar() {
 
     const facultyLinks = [
         { to: '/faculty/dashboard', icon: '📊', label: 'Dashboard' },
+        { to: '/faculty/submissions', icon: '📝', label: 'Submissions' },
         { to: '/faculty/attendance', icon: '✅', label: 'Mark Attendance' },
         { to: '/faculty/reports', icon: '📋', label: 'Reports' },
     ];

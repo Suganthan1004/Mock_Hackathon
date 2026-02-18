@@ -13,6 +13,7 @@ export default function Login() {
     const [loading, setLoading] = useState(false);
 
     const isStudent = role === 'student';
+    const isAdmin = role === 'admin';
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -27,9 +28,14 @@ export default function Login() {
             // Validate role matches the portal they selected
             if (
                 (isStudent && userRole === 'STUDENT') ||
-                (!isStudent && userRole === 'FACULTY')
+                (!isStudent && !isAdmin && userRole === 'FACULTY') ||
+                (isAdmin && userRole === 'ADMIN')
             ) {
-                navigate(isStudent ? '/student/dashboard' : '/faculty/dashboard');
+                navigate(
+                    userRole === 'STUDENT' ? '/student/dashboard' :
+                        userRole === 'ADMIN' ? '/admin/dashboard' :
+                            '/faculty/dashboard'
+                );
             } else {
                 setError(`This account is registered as ${userRole}. Please use the correct portal.`);
             }
@@ -45,8 +51,8 @@ export default function Login() {
             <div className="login-container">
                 <div className="login-card glass-card animate-fade-in-up">
                     <div className="login-header">
-                        <div className="login-icon">{isStudent ? '🎓' : '🧑‍🏫'}</div>
-                        <h2>{isStudent ? 'Student' : 'Faculty'} Login</h2>
+                        <div className="login-icon">{isAdmin ? '⚙️' : isStudent ? '🎓' : '🧑‍🏫'}</div>
+                        <h2>{isAdmin ? 'Admin' : isStudent ? 'Student' : 'Faculty'} Login</h2>
                         <p className="login-subtitle">Sign in to access your portal</p>
                     </div>
 
@@ -64,7 +70,7 @@ export default function Login() {
                                 className="form-input"
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
-                                placeholder={isStudent ? 'arjun@veltech.edu' : 'ramesh@veltech.edu'}
+                                placeholder={isAdmin ? 'admin@veltech.edu' : isStudent ? 'arjun@veltech.edu' : 'ramesh@veltech.edu'}
                                 required
                             />
                         </div>
@@ -101,16 +107,25 @@ export default function Login() {
                         <p className="login-switch">
                             {isStudent ? (
                                 <>Are you faculty? <Link to="/login/faculty">Faculty Login →</Link></>
+                            ) : isAdmin ? (
+                                <>Are you a student? <Link to="/login/student">Student Login →</Link></>
                             ) : (
                                 <>Are you a student? <Link to="/login/student">Student Login →</Link></>
                             )}
                         </p>
+                        {!isAdmin && (
+                            <p className="login-switch" style={{ marginTop: '0.25rem' }}>
+                                <Link to="/login/admin">🔒 Admin Login →</Link>
+                            </p>
+                        )}
                     </div>
 
                     {/* Demo credentials */}
                     <div className="demo-credentials">
                         <p className="demo-title">🔑 Demo Credentials</p>
-                        {isStudent ? (
+                        {isAdmin ? (
+                            <p>Email: <code>admin@veltech.edu</code> | Password: <code>admin123</code></p>
+                        ) : isStudent ? (
                             <p>Email: <code>arjun@veltech.edu</code> | Password: <code>student123</code></p>
                         ) : (
                             <p>Email: <code>ramesh@veltech.edu</code> | Password: <code>faculty123</code></p>

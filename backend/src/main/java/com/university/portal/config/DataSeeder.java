@@ -17,6 +17,8 @@ public class DataSeeder implements CommandLineRunner {
         private final UserRepository userRepository;
         private final CourseRepository courseRepository;
         private final AssignmentRepository assignmentRepository;
+        private final EventRepository eventRepository;
+        private final NewsRepository newsRepository;
         private final PasswordEncoder passwordEncoder;
 
         @Override
@@ -74,6 +76,12 @@ public class DataSeeder implements CommandLineRunner {
                                 .name("Dr. Lakshmi Iyer").email("lakshmi@veltech.edu")
                                 .password(passwordEncoder.encode("faculty123"))
                                 .role(User.Role.FACULTY).department("Computer Science").build());
+
+                // ── Admin User ─────────────────────────────────────────
+                userRepository.save(User.builder()
+                                .name("Admin").email("admin@veltech.edu")
+                                .password(passwordEncoder.encode("admin123"))
+                                .role(User.Role.ADMIN).department("Administration").build());
 
                 // ── Courses ────────────────────────────────────────────
                 courseRepository.save(Course.builder()
@@ -179,6 +187,71 @@ public class DataSeeder implements CommandLineRunner {
                                 Assignment.builder().title("Protocol Design").courseId("CS204")
                                                 .dueDate(LocalDate.of(2026, 3, 23))
                                                 .description("Design a custom application-layer protocol.").build()));
+
+                // ── Events ────────────────────────────────────────────
+                eventRepository.saveAll(List.of(
+                                Event.builder()
+                                                .title("Annual Tech Fest 2026")
+                                                .description("Join us for three days of innovation, workshops, and competitions featuring industry leaders and student projects.")
+                                                .date(LocalDate.of(2026, 3, 15))
+                                                .category("upcoming").tag("Technology").location("Main Auditorium")
+                                                .build(),
+                                Event.builder()
+                                                .title("Guest Lecture: AI in Healthcare")
+                                                .description("Distinguished lecture by Dr. Priya Sharma on AI applications in modern healthcare and diagnostics.")
+                                                .date(LocalDate.of(2026, 2, 28))
+                                                .category("upcoming").tag("Research").location("Seminar Hall B")
+                                                .build(),
+                                Event.builder()
+                                                .title("Cultural Night 2026")
+                                                .description("An evening of music, dance, and drama performances by our talented students from all departments.")
+                                                .date(LocalDate.of(2026, 4, 5))
+                                                .category("upcoming").tag("Culture").location("Open Air Theatre")
+                                                .build(),
+                                Event.builder()
+                                                .title("Hackathon: Code for Good")
+                                                .description("24-hour hackathon to build solutions for social good. Cash prizes worth ₹1,00,000 for top teams!")
+                                                .date(LocalDate.of(2026, 3, 22))
+                                                .category("upcoming").tag("Hackathon").location("CS Building").build(),
+                                Event.builder()
+                                                .title("Spring Semester Coding Contest")
+                                                .description("Competitive programming contest open to all years. Solve real-world algorithmic challenges.")
+                                                .date(LocalDate.of(2026, 3, 1))
+                                                .category("ongoing").tag("Competition").location("Lab Complex A")
+                                                .build(),
+                                Event.builder()
+                                                .title("Research Paper Writing Workshop")
+                                                .description("Week-long workshop on academic writing, citation management, and publishing in top journals.")
+                                                .date(LocalDate.of(2026, 2, 20))
+                                                .category("ongoing").tag("Workshop").location("Library Seminar Room")
+                                                .build()));
+
+                // ── News ──────────────────────────────────────────────
+                newsRepository.saveAll(List.of(
+                                News.builder()
+                                                .title("University Ranked #5 Nationally")
+                                                .description("Vel Tech University climbs to 5th position in national rankings.")
+                                                .date(LocalDate.of(2026, 2, 10))
+                                                .content("Vel Tech University has been ranked among the top 5 universities in India by the NIRF 2026 rankings.")
+                                                .build(),
+                                News.builder()
+                                                .title("New AI Research Lab Inaugurated")
+                                                .description("State-of-the-art AI and ML research lab now open for students and faculty.")
+                                                .date(LocalDate.of(2026, 2, 8))
+                                                .content("The new AI & ML research laboratory, built with industry partnerships from Google and NVIDIA, is now operational.")
+                                                .build(),
+                                News.builder()
+                                                .title("Record Campus Placements — 95% Placed")
+                                                .description("This year's placement drive achieves a record 95% placement rate.")
+                                                .date(LocalDate.of(2026, 2, 5))
+                                                .content("Over 95% of eligible students received placement offers from top companies including Google, Microsoft, Amazon, and TCS.")
+                                                .build(),
+                                News.builder()
+                                                .title("International Collaboration with MIT")
+                                                .description("Vel Tech signs MoU with MIT for joint research programs.")
+                                                .date(LocalDate.of(2026, 1, 28))
+                                                .content("A landmark MoU has been signed with MIT for collaborative research in quantum computing and sustainable energy.")
+                                                .build()));
 
                 System.out.println("✅ Database seeded with demo data!");
         }

@@ -17,6 +17,9 @@ import AIFeedback from './pages/AIFeedback';
 import FacultyDashboard from './pages/FacultyDashboard';
 import AttendanceMarking from './pages/AttendanceMarking';
 import AttendanceReport from './pages/AttendanceReport';
+import AdminDashboard from './pages/AdminDashboard';
+import EventDetail from './pages/EventDetail';
+import FacultySubmissions from './pages/FacultySubmissions';
 
 function App() {
   return (
@@ -33,6 +36,7 @@ function App() {
               <Route path="/courses" element={<Courses />} />
               <Route path="/login/:role" element={<Login />} />
               <Route path="/register" element={<Register />} />
+              <Route path="/events/:id" element={<EventDetail />} />
 
               {/* Student Routes */}
               <Route path="/student/dashboard" element={
@@ -65,6 +69,18 @@ function App() {
               <Route path="/faculty/reports" element={
                 <ProtectedRoute requiredRole="FACULTY">
                   <AttendanceReport />
+                </ProtectedRoute>
+              } />
+              <Route path="/faculty/submissions" element={
+                <ProtectedRoute requiredRole="FACULTY">
+                  <FacultySubmissions />
+                </ProtectedRoute>
+              } />
+
+              {/* Admin Routes */}
+              <Route path="/admin/dashboard" element={
+                <ProtectedRoute requiredRole="ADMIN">
+                  <AdminDashboard />
                 </ProtectedRoute>
               } />
             </Routes>

@@ -104,4 +104,30 @@ public class AssignmentController {
 
         return ResponseEntity.ok(result);
     }
+
+    @GetMapping("/course/{courseId}/submissions")
+    public ResponseEntity<?> getSubmissionsByCourse(@PathVariable String courseId) {
+        List<Submission> submissions = submissionRepository.findByCourseId(courseId);
+
+        List<Map<String, Object>> result = submissions.stream().map(s -> {
+            Map<String, Object> map = new LinkedHashMap<>();
+            map.put("id", s.getId());
+            map.put("assignmentId", s.getAssignmentId());
+            map.put("studentId", s.getStudentId());
+            map.put("courseId", s.getCourseId());
+            map.put("fileName", s.getFileName());
+            map.put("status", s.getStatus().name());
+            map.put("score", s.getScore());
+            map.put("submittedAt", s.getSubmittedAt() != null ? s.getSubmittedAt().toString() : null);
+
+            // Get assignment title
+            Assignment assignment = assignmentRepository.findById(s.getAssignmentId()).orElse(null);
+            map.put("assignmentTitle",
+                    assignment != null ? assignment.getTitle() : "Assignment #" + s.getAssignmentId());
+
+            return map;
+        }).collect(Collectors.toList());
+
+        return ResponseEntity.ok(result);
+    }
 }

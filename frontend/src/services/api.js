@@ -38,6 +38,9 @@ export const universityAPI = {
 
     /** GET /api/university/events – Events & news */
     getEvents: () => api.get('/university/events'),
+
+    /** GET /api/university/events/{id} – Single event */
+    getEventById: (id) => api.get(`/university/events/${id}`),
 };
 
 // ──────────────────────────────────────────
@@ -95,6 +98,17 @@ export const aiFeedbackAPI = {
 };
 
 // ──────────────────────────────────────────
+// Faculty
+// ──────────────────────────────────────────
+export const facultyAPI = {
+    /** GET /api/assignments/course/{courseId}/submissions – All submissions for a course */
+    getSubmissions: (courseId) => api.get(`/assignments/course/${courseId}/submissions`),
+
+    /** GET /api/ai-feedback/submission/{submissionId} – AI feedback for a submission */
+    getFeedback: (submissionId) => api.get(`/ai-feedback/submission/${submissionId}`),
+};
+
+// ──────────────────────────────────────────
 // Dashboards
 // ──────────────────────────────────────────
 export const dashboardAPI = {
@@ -103,6 +117,35 @@ export const dashboardAPI = {
 
     /** GET /api/dashboard/faculty/{facultyId} – Faculty dashboard data */
     getFaculty: (facultyId) => api.get(`/dashboard/faculty/${facultyId}`),
+};
+
+// ──────────────────────────────────────────
+// Admin (Events & News Management)
+// ──────────────────────────────────────────
+export const adminAPI = {
+    /** GET /api/admin/events – List all events */
+    getEvents: () => api.get('/admin/events'),
+
+    /** POST /api/admin/events – Create event */
+    createEvent: (event) => api.post('/admin/events', event),
+
+    /** PUT /api/admin/events/{id} – Update event */
+    updateEvent: (id, event) => api.put(`/admin/events/${id}`, event),
+
+    /** DELETE /api/admin/events/{id} – Delete event */
+    deleteEvent: (id) => api.delete(`/admin/events/${id}`),
+
+    /** GET /api/admin/news – List all news */
+    getNews: () => api.get('/admin/news'),
+
+    /** POST /api/admin/news – Create news */
+    createNews: (news) => api.post('/admin/news', news),
+
+    /** PUT /api/admin/news/{id} – Update news */
+    updateNews: (id, news) => api.put(`/admin/news/${id}`, news),
+
+    /** DELETE /api/admin/news/{id} – Delete news */
+    deleteNews: (id) => api.delete(`/admin/news/${id}`),
 };
 
 export default api;

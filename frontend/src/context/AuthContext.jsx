@@ -44,6 +44,7 @@ export function AuthProvider({ children }) {
         { id: 'STU002', name: 'Priya Patel', email: 'priya@veltech.edu', role: 'STUDENT', department: 'Data Science', token: 'mock-student-token' },
         { id: 'FAC001', name: 'Dr. Ramesh Kumar', email: 'ramesh@veltech.edu', role: 'FACULTY', department: 'Computer Science', token: 'mock-faculty-token' },
         { id: 'FAC002', name: 'Dr. Anita Singh', email: 'anita@veltech.edu', role: 'FACULTY', department: 'Electronics', token: 'mock-faculty-token' },
+        { id: 'ADM001', name: 'Admin', email: 'admin@veltech.edu', role: 'ADMIN', department: 'Administration', token: 'mock-admin-token' },
       ];
 
       const mockPasswords = {
@@ -51,6 +52,7 @@ export function AuthProvider({ children }) {
         'priya@veltech.edu': 'student123',
         'ramesh@veltech.edu': 'faculty123',
         'anita@veltech.edu': 'faculty123',
+        'admin@veltech.edu': 'admin123',
       };
 
       const found = mockUsers.find(

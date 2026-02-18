@@ -1,4 +1,5 @@
 C:\Users\santhoshini\OneDrive\Desktop\HCLT\MockHack\TapAcademy\Mock_Hackathon\backend\src\main\java\com\university\portal\repository\UserRepository.java
+C:\Users\santhoshini\OneDrive\Desktop\HCLT\MockHack\TapAcademy\Mock_Hackathon\backend\src\main\java\com\university\portal\controller\AdminController.java
 C:\Users\santhoshini\OneDrive\Desktop\HCLT\MockHack\TapAcademy\Mock_Hackathon\backend\src\main\java\com\university\portal\entity\Assignment.java
 C:\Users\santhoshini\OneDrive\Desktop\HCLT\MockHack\TapAcademy\Mock_Hackathon\backend\src\main\java\com\university\portal\config\SecurityConfig.java
 C:\Users\santhoshini\OneDrive\Desktop\HCLT\MockHack\TapAcademy\Mock_Hackathon\backend\src\main\java\com\university\portal\dto\LoginRequest.java
@@ -9,6 +10,7 @@ C:\Users\santhoshini\OneDrive\Desktop\HCLT\MockHack\TapAcademy\Mock_Hackathon\ba
 C:\Users\santhoshini\OneDrive\Desktop\HCLT\MockHack\TapAcademy\Mock_Hackathon\backend\src\main\java\com\university\portal\repository\AssignmentRepository.java
 C:\Users\santhoshini\OneDrive\Desktop\HCLT\MockHack\TapAcademy\Mock_Hackathon\backend\src\main\java\com\university\portal\controller\DashboardController.java
 C:\Users\santhoshini\OneDrive\Desktop\HCLT\MockHack\TapAcademy\Mock_Hackathon\backend\src\main\java\com\university\portal\repository\CourseRepository.java
+C:\Users\santhoshini\OneDrive\Desktop\HCLT\MockHack\TapAcademy\Mock_Hackathon\backend\src\main\java\com\university\portal\repository\EventRepository.java
 C:\Users\santhoshini\OneDrive\Desktop\HCLT\MockHack\TapAcademy\Mock_Hackathon\backend\src\main\java\com\university\portal\repository\SubmissionRepository.java
 C:\Users\santhoshini\OneDrive\Desktop\HCLT\MockHack\TapAcademy\Mock_Hackathon\backend\src\main\java\com\university\portal\entity\Course.java
 C:\Users\santhoshini\OneDrive\Desktop\HCLT\MockHack\TapAcademy\Mock_Hackathon\backend\src\main\java\com\university\portal\entity\AIFeedback.java
@@ -20,7 +22,10 @@ C:\Users\santhoshini\OneDrive\Desktop\HCLT\MockHack\TapAcademy\Mock_Hackathon\ba
 C:\Users\santhoshini\OneDrive\Desktop\HCLT\MockHack\TapAcademy\Mock_Hackathon\backend\src\main\java\com\university\portal\config\DataSeeder.java
 C:\Users\santhoshini\OneDrive\Desktop\HCLT\MockHack\TapAcademy\Mock_Hackathon\backend\src\main\java\com\university\portal\entity\Attendance.java
 C:\Users\santhoshini\OneDrive\Desktop\HCLT\MockHack\TapAcademy\Mock_Hackathon\backend\src\main\java\com\university\portal\controller\RegisterController.java
+C:\Users\santhoshini\OneDrive\Desktop\HCLT\MockHack\TapAcademy\Mock_Hackathon\backend\src\main\java\com\university\portal\entity\Event.java
 C:\Users\santhoshini\OneDrive\Desktop\HCLT\MockHack\TapAcademy\Mock_Hackathon\backend\src\main\java\com\university\portal\dto\LoginResponse.java
+C:\Users\santhoshini\OneDrive\Desktop\HCLT\MockHack\TapAcademy\Mock_Hackathon\backend\src\main\java\com\university\portal\entity\News.java
+C:\Users\santhoshini\OneDrive\Desktop\HCLT\MockHack\TapAcademy\Mock_Hackathon\backend\src\main\java\com\university\portal\repository\NewsRepository.java
 C:\Users\santhoshini\OneDrive\Desktop\HCLT\MockHack\TapAcademy\Mock_Hackathon\backend\src\main\java\com\university\portal\controller\AttendanceController.java
 C:\Users\santhoshini\OneDrive\Desktop\HCLT\MockHack\TapAcademy\Mock_Hackathon\backend\src\main\java\com\university\portal\repository\AttendanceRepository.java
 C:\Users\santhoshini\OneDrive\Desktop\HCLT\MockHack\TapAcademy\Mock_Hackathon\backend\src\main\java\com\university\portal\controller\AIFeedbackController.java

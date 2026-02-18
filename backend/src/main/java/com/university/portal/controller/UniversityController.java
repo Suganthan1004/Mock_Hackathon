@@ -1,5 +1,7 @@
 package com.university.portal.controller;
 
+import com.university.portal.repository.EventRepository;
+import com.university.portal.repository.NewsRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -10,6 +12,9 @@ import java.util.*;
 @RequestMapping("/api/university")
 @RequiredArgsConstructor
 public class UniversityController {
+
+        private final EventRepository eventRepository;
+        private final NewsRepository newsRepository;
 
         @GetMapping("/info")
         public ResponseEntity<?> getInfo() {
@@ -29,35 +34,15 @@ public class UniversityController {
 
         @GetMapping("/events")
         public ResponseEntity<?> getEvents() {
-                List<Map<String, Object>> events = List.of(
-                                Map.of("id", 1, "title", "Annual Tech Fest 2026", "date", "2026-03-15",
-                                                "description",
-                                                "Join us for three days of innovation, workshops, and competitions.",
-                                                "category", "Academic", "location", "Main Auditorium"),
-                                Map.of("id", 2, "title", "Guest Lecture: AI in Healthcare", "date", "2026-02-28",
-                                                "description",
-                                                "Distinguished lecture by Dr. Priya Sharma on AI applications in modern healthcare.",
-                                                "category", "Lecture", "location", "Seminar Hall B"),
-                                Map.of("id", 3, "title", "Cultural Night 2026", "date", "2026-04-05",
-                                                "description",
-                                                "An evening of music, dance, and drama performances by our talented students.",
-                                                "category", "Cultural", "location", "Open Air Theatre"),
-                                Map.of("id", 4, "title", "Hackathon: Code for Good", "date", "2026-03-22",
-                                                "description",
-                                                "24-hour hackathon to build solutions for social good. Cash prizes for top teams!",
-                                                "category", "Competition", "location", "CS Building"));
+                return ResponseEntity.ok(Map.of(
+                                "events", eventRepository.findAllByOrderByDateDesc(),
+                                "news", newsRepository.findAllByOrderByDateDesc()));
+        }
 
-                List<Map<String, Object>> news = List.of(
-                                Map.of("id", 1, "title", "University Ranked in Top 50 Nationally",
-                                                "date", "2026-02-10", "content",
-                                                "Vel Tech University has been ranked among the top 50 universities in India."),
-                                Map.of("id", 2, "title", "New AI Research Lab Inaugurated",
-                                                "date", "2026-02-05", "content",
-                                                "State-of-the-art AI and ML research laboratory opened with industry partnerships."),
-                                Map.of("id", 3, "title", "Record Campus Placements",
-                                                "date", "2026-01-28", "content",
-                                                "95% placement rate achieved with top companies like Google, Microsoft, and Amazon."));
-
-                return ResponseEntity.ok(Map.of("events", events, "news", news));
+        @GetMapping("/events/{id}")
+        public ResponseEntity<?> getEventById(@PathVariable Long id) {
+                return eventRepository.findById(id)
+                                .map(ResponseEntity::ok)
+                                .orElse(ResponseEntity.notFound().build());
         }
 }

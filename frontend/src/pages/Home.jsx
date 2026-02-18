@@ -1,46 +1,33 @@
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { universityAPI } from '../services/api';
 import './Home.css';
-
-// Fallback mock data if backend is unavailable
-const fallbackEvents = [
-    { id: 1, title: 'Annual Tech Symposium 2026', description: 'Join us for three days of cutting-edge technology presentations, workshops, and networking with industry leaders.', date: '2026-03-15', category: 'upcoming', tag: 'Technology' },
-    { id: 2, title: 'International Research Conference', description: 'Present your research papers and collaborate with scholars from across the globe.', date: '2026-04-20', category: 'upcoming', tag: 'Research' },
-    { id: 3, title: 'Spring Semester Hackathon', description: '48-hour coding challenge to build innovative solutions. Open to all departments.', date: '2026-03-01', category: 'ongoing', tag: 'Hackathon' },
-    { id: 4, title: 'Cultural Fest – Harmony 2026', description: 'A celebration of arts, music, and diversity. Performances, exhibitions, and food stalls.', date: '2026-04-05', category: 'upcoming', tag: 'Culture' },
-];
-
-const fallbackNews = [
-    { id: 1, title: 'University Ranked #5 Nationally', description: 'Vel Tech University climbs to 5th position in national rankings.', date: '2026-02-10' },
-    { id: 2, title: 'New AI Research Lab Inaugurated', description: 'State-of-the-art AI and Machine Learning research lab now open.', date: '2026-02-08' },
-    { id: 3, title: 'Placement Record: 95% Students Placed', description: 'This year\'s placement drive achieves a record 95% placement rate.', date: '2026-02-05' },
-];
-
-const announcements = [
-    'Mid-semester examinations begin March 20, 2026',
-    'Last date for scholarship applications: March 10, 2026',
-    'Library will remain open 24/7 during exam season',
-    'New elective courses available for next semester registration',
-];
 
 export default function Home() {
     const [activeTab, setActiveTab] = useState('upcoming');
     const [currentAnnouncement, setCurrentAnnouncement] = useState(0);
-    const [events, setEvents] = useState(fallbackEvents);
-    const [news, setNews] = useState(fallbackNews);
+    const [events, setEvents] = useState([]);
+    const [news, setNews] = useState([]);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        // GET /api/university/events
         universityAPI.getEvents()
             .then((res) => {
                 if (res.data?.events) setEvents(res.data.events);
                 if (res.data?.news) setNews(res.data.news);
             })
-            .catch(() => {
-                // Use fallback data
-            });
+            .catch((err) => {
+                console.error('Failed to fetch events/news:', err);
+            })
+            .finally(() => setLoading(false));
     }, []);
+
+    const announcements = [
+        'Mid-semester examinations begin March 20, 2026',
+        'Last date for scholarship applications: March 10, 2026',
+        'Library will remain open 24/7 during exam season',
+        'New elective courses available for next semester registration',
+    ];
 
     useEffect(() => {
         const interval = setInterval(() => {
@@ -70,6 +57,9 @@ export default function Home() {
                             </Link>
                             <Link to="/login/faculty" className="btn btn-secondary">
                                 🧑‍🏫 Faculty Portal
+                            </Link>
+                            <Link to="/login/admin" className="btn btn-secondary" style={{ background: 'rgba(240, 192, 64, 0.15)', borderColor: '#f0c040', color: '#f0c040' }}>
+                                🔒 Admin Portal
                             </Link>
                         </div>
                     </div>
@@ -117,19 +107,30 @@ export default function Home() {
                     </div>
 
                     <div className="events-grid">
-                        {filteredEvents.map((event, index) => (
-                            <div className="event-card glass-card animate-fade-in-up" key={event.id} style={{ animationDelay: `${index * 0.1}s` }}>
-                                <div className="event-card-top">
-                                    <span className="event-tag">{event.tag}</span>
-                                    <span className="event-date">
-                                        {new Date(event.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
-                                    </span>
-                                </div>
-                                <h3 className="event-title">{event.title}</h3>
-                                <p className="event-desc">{event.description}</p>
-                                <button className="btn btn-secondary" style={{ marginTop: 'auto', width: '100%' }}>Learn More →</button>
+                        {loading ? (
+                            <div style={{ gridColumn: '1/-1', textAlign: 'center', padding: '2rem', color: 'var(--text-secondary)' }}>
+                                <div className="spinner"></div>
+                                <p>Loading events...</p>
                             </div>
-                        ))}
+                        ) : filteredEvents.length > 0 ? (
+                            filteredEvents.map((event, index) => (
+                                <div className="event-card glass-card animate-fade-in-up" key={event.id} style={{ animationDelay: `${index * 0.1}s` }}>
+                                    <div className="event-card-top">
+                                        <span className="event-tag">{event.tag}</span>
+                                        <span className="event-date">
+                                            {new Date(event.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                                        </span>
+                                    </div>
+                                    <h3 className="event-title">{event.title}</h3>
+                                    <p className="event-desc">{event.description}</p>
+                                    <Link to={`/events/${event.id}`} state={{ event }} className="btn btn-secondary" style={{ marginTop: 'auto', width: '100%', textAlign: 'center' }}>Learn More →</Link>
+                                </div>
+                            ))
+                        ) : (
+                            <div style={{ gridColumn: '1/-1', textAlign: 'center', padding: '2rem', color: 'var(--text-secondary)' }}>
+                                <p>No {activeTab} events at the moment. Check back later!</p>
+                            </div>
+                        )}
                     </div>
                 </div>
             </section>
@@ -140,15 +141,26 @@ export default function Home() {
                     <h2 className="section-title">Latest News</h2>
                     <p className="section-subtitle">What's new at Vel Tech University</p>
                     <div className="news-grid">
-                        {news.map((item, index) => (
-                            <div className="news-card glass-card animate-fade-in-up" key={item.id} style={{ animationDelay: `${index * 0.1}s` }}>
-                                <div className="news-date">
-                                    {new Date(item.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
-                                </div>
-                                <h3 className="news-title">{item.title}</h3>
-                                <p className="news-desc">{item.description}</p>
+                        {loading ? (
+                            <div style={{ gridColumn: '1/-1', textAlign: 'center', padding: '2rem', color: 'var(--text-secondary)' }}>
+                                <div className="spinner"></div>
+                                <p>Loading news...</p>
                             </div>
-                        ))}
+                        ) : news.length > 0 ? (
+                            news.map((item, index) => (
+                                <div className="news-card glass-card animate-fade-in-up" key={item.id} style={{ animationDelay: `${index * 0.1}s` }}>
+                                    <div className="news-date">
+                                        {new Date(item.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+                                    </div>
+                                    <h3 className="news-title">{item.title}</h3>
+                                    <p className="news-desc">{item.description}</p>
+                                </div>
+                            ))
+                        ) : (
+                            <div style={{ gridColumn: '1/-1', textAlign: 'center', padding: '2rem', color: 'var(--text-secondary)' }}>
+                                <p>No news available at the moment.</p>
+                            </div>
+                        )}
                     </div>
                 </div>
             </section>
