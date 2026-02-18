@@ -14,6 +14,7 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import StudentDashboard from './pages/StudentDashboard';
 import AssignmentSubmission from './pages/AssignmentSubmission';
+import StudentAssignments from './pages/StudentAssignments';
 import AIFeedback from './pages/AIFeedback';
 import FacultyDashboard from './pages/FacultyDashboard';
 import AttendanceMarking from './pages/AttendanceMarking';
@@ -54,6 +55,11 @@ function App() {
                 <Route path="/student/feedback/:id" element={
                   <ProtectedRoute requiredRole="STUDENT">
                     <AIFeedback />
+                  </ProtectedRoute>
+                } />
+                <Route path="/student/all-assignments" element={
+                  <ProtectedRoute requiredRole="STUDENT">
+                    <StudentAssignments />
                   </ProtectedRoute>
                 } />
 

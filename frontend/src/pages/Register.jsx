@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { authAPI } from '../services/api';
 import { FiUserPlus, FiAlertTriangle, FiCheckCircle } from 'react-icons/fi';
 import './Login.css';
 
@@ -36,14 +37,25 @@ export default function Register() {
         }
 
         setLoading(true);
-        await new Promise((r) => setTimeout(r, 1000));
 
-        setSuccess(true);
-        setLoading(false);
+        try {
+            await authAPI.register({
+                name: formData.name,
+                email: formData.email,
+                password: formData.password,
+                role: formData.role,
+                department: formData.department
+            });
 
-        setTimeout(() => {
-            navigate(`/login/${formData.role.toLowerCase()}`);
-        }, 2000);
+            setSuccess(true);
+            setTimeout(() => {
+                navigate(`/login/${formData.role.toLowerCase()}`);
+            }, 2000);
+        } catch (err) {
+            setError(err.response?.data?.error || 'Registration failed. Please try again.');
+        } finally {
+            setLoading(false);
+        }
     };
 
     return (

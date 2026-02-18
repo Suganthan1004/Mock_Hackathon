@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { courseAPI, assignmentAPI } from '../services/api';
 import { evaluateAssignment, readFileContent, isAIConfigured } from '../services/aiService';
@@ -38,8 +38,17 @@ export default function AssignmentSubmission() {
     const [feedback, setFeedback] = useState(null);
     const [aiError, setAiError] = useState('');
 
-    // Fetch courses list
+    const [submissions, setSubmissions] = useState([]);
+
+    const fallbackSubmissions = [
+        { id: 101, assignmentId: 1, courseId: 'CS201', studentId: 'STU001', fileName: 'lab1_linked_lists.pdf', status: 'SUBMITTED', score: 85, submittedAt: '2026-02-18T10:30:00' },
+        { id: 103, assignmentId: 3, courseId: 'CS202', studentId: 'STU001', fileName: 'db_design_v2.pdf', status: 'EVALUATED', score: 92, submittedAt: '2026-02-14T15:45:00' },
+        { id: 104, assignmentId: 4, courseId: 'CS305', studentId: 'STU001', fileName: 'react_project_final.zip', status: 'SUBMITTED', score: null, submittedAt: '2026-02-24T09:20:00' },
+    ];
+
+    // Fetch courses and student submissions
     useEffect(() => {
+        // Fetch courses
         courseAPI.getAll()
             .then((res) => {
                 if (res.data && Array.isArray(res.data)) {
@@ -47,19 +56,42 @@ export default function AssignmentSubmission() {
                 }
             })
             .catch(() => { /* use fallback */ });
-    }, []);
+
+        // Fetch student submissions
+        const studentId = user?.id || 'STU001';
+        assignmentAPI.getByStudent(studentId)
+            .then(res => {
+                if (res.data && Array.isArray(res.data) && res.data.length > 0) {
+                    setSubmissions(res.data);
+                } else {
+                    setSubmissions(fallbackSubmissions);
+                }
+            })
+            .catch(err => {
+                console.error("Failed to fetch submissions, using fallback", err);
+                setSubmissions(fallbackSubmissions);
+            });
+    }, [user]);
 
     // Fetch assignments when course is selected
     const handleCourseChange = async (courseId) => {
         setSelectedCourse(courseId);
         setSelectedAssignment('');
+        setFile(null);
+        setSubmitted(false);
+        setFeedback(null);
+
         if (!courseId) { setAssignments([]); return; }
 
         try {
             // GET /api/assignments/course/{courseId}
             const res = await assignmentAPI.getByCourse(courseId);
             if (res.data && Array.isArray(res.data)) {
-                setAssignments(res.data.map(a => ({ id: a.id, title: a.title || a.name })));
+                setAssignments(res.data.map(a => ({
+                    id: a.id,
+                    title: a.title || a.name,
+                    dueDate: a.dueDate
+                })));
             } else {
                 throw new Error('fallback');
             }
@@ -207,26 +239,93 @@ export default function AssignmentSubmission() {
 
                             <div className="form-group">
                                 <label className="form-label">Upload File</label>
-                                <div className={`file-upload-area ${file ? 'has-file' : ''}`} onDragOver={(e) => e.preventDefault()} onDrop={handleDrop} onClick={() => document.getElementById('fileInput').click()}>
-                                    <input type="file" id="fileInput" accept=".pdf,.docx,.doc,.png,.jpg,.jpeg" onChange={handleFileChange} style={{ display: 'none' }} />
-                                    {file ? (
+                                {(() => {
+                                    const assignment = assignments.find(a => String(a.id) === String(selectedAssignment));
+                                    const existing = submissions.find(s => String(s.assignmentId) === String(selectedAssignment));
+                                    const dueDate = assignment?.dueDate ? new Date(assignment.dueDate) : null;
+
+                                    // Check if late (compare dates only)
+                                    const today = new Date();
+                                    today.setHours(0, 0, 0, 0);
+                                    const isLate = dueDate && today > dueDate;
+
+                                    return (
                                         <>
-                                            <span className="file-upload-icon"><FiFile size={28} /></span>
-                                            <p className="file-name">{file.name}</p>
-                                            <p className="file-upload-hint">{(file.size / 1024 / 1024).toFixed(2)} MB — Click to change</p>
+                                            {existing && (
+                                                <div className="existing-submission" style={{ marginBottom: 15, padding: 10, background: 'rgba(100,255,218,0.1)', borderRadius: 8, border: '1px solid rgba(100,255,218,0.3)' }}>
+                                                    <p style={{ margin: 0, color: 'var(--accent-blue)', fontSize: '0.9rem' }}>
+                                                        <FiCheckCircle style={{ marginRight: 5 }} />
+                                                        <strong>Current Submission:</strong> {existing.fileName}
+                                                    </p>
+                                                    <div className="submission-status glass-card">
+                                                        <h3>Current Submission</h3>
+                                                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                                            <div>
+                                                                <p><strong>File:</strong> {existing.fileName}</p>
+                                                                <p><strong>Submitted on:</strong> {new Date(existing.submittedAt).toLocaleString()}</p>
+                                                                {existing.score && <p><strong>Score:</strong> {existing.score}%</p>}
+                                                            </div>
+                                                            <button
+                                                                onClick={async () => {
+                                                                    try {
+                                                                        const res = await assignmentAPI.downloadSubmission(existing.id);
+                                                                        const url = window.URL.createObjectURL(new Blob([res.data]));
+                                                                        const link = document.createElement('a');
+                                                                        link.href = url;
+                                                                        link.setAttribute('download', existing.fileName);
+                                                                        document.body.appendChild(link);
+                                                                        link.click();
+                                                                        link.remove();
+                                                                    } catch (err) {
+                                                                        console.error('Download failed', err);
+                                                                        alert('Failed to download file');
+                                                                    }
+                                                                }}
+                                                                className="btn btn-secondary"
+                                                                style={{ fontSize: '0.9rem', padding: '6px 12px' }}
+                                                            >
+                                                                ⬇️ Download
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            )}
+
+                                            {dueDate && (
+                                                <p style={{ fontSize: '0.85rem', marginBottom: 10, color: isLate ? '#ff6b6b' : 'var(--text-secondary)' }}>
+                                                    <strong>Due Date:</strong> {dueDate.toLocaleDateString()} {isLate && '(Deadline Passed)'}
+                                                </p>
+                                            )}
+
+                                            {!isLate ? (
+                                                <div className={`file-upload-area ${file ? 'has-file' : ''}`} onDragOver={(e) => e.preventDefault()} onDrop={handleDrop} onClick={() => document.getElementById('fileInput').click()}>
+                                                    <input type="file" id="fileInput" accept=".pdf,.docx,.doc,.png,.jpg,.jpeg" onChange={handleFileChange} style={{ display: 'none' }} />
+                                                    {file ? (
+                                                        <>
+                                                            <span className="file-upload-icon"><FiFile size={28} /></span>
+                                                            <p className="file-name">{file.name}</p>
+                                                            <p className="file-upload-hint">{(file.size / 1024 / 1024).toFixed(2)} MB — Click to change</p>
+                                                        </>
+                                                    ) : (
+                                                        <>
+                                                            <span className="file-upload-icon">📁</span>
+                                                            <p className="file-upload-text">{existing ? 'Drag & drop to replace file' : 'Drag & drop your file here or click to browse'}</p>
+                                                            <p className="file-upload-hint">Supports PDF, DOCX, PNG, JPG (Max 10MB)</p>
+                                                        </>
+                                                    )}
+                                                </div>
+                                            ) : (
+                                                <div className="file-upload-area disabled" style={{ opacity: 0.6, cursor: 'not-allowed', borderColor: '#444' }}>
+                                                    <p>Submissions are closed for this assignment.</p>
+                                                </div>
+                                            )}
                                         </>
-                                    ) : (
-                                        <>
-                                            <span className="file-upload-icon">📁</span>
-                                            <p className="file-upload-text">Drag & drop your file here or click to browse</p>
-                                            <p className="file-upload-hint">Supports PDF, DOCX, PNG, JPG (Max 10MB)</p>
-                                        </>
-                                    )}
-                                </div>
+                                    );
+                                })()}
                             </div>
 
                             <button type="submit" className="btn btn-primary" disabled={submitting || !file || !selectedAssignment} style={{ minWidth: 200 }}>
-                                {submitting ? '⏳ Uploading...' : '🚀 Submit & Evaluate'}
+                                {submitting ? '⏳ Uploading...' : '🚀 ' + (submissions.find(s => String(s.assignmentId) === String(selectedAssignment)) ? 'Resubmit & Evaluate' : 'Submit & Evaluate')}
                             </button>
                         </form>
                     </div>

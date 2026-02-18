@@ -89,4 +89,97 @@ public class AdminController {
         newsRepository.deleteById(id);
         return ResponseEntity.ok(Map.of("message", "News deleted successfully"));
     }
+
+    // ── Users CRUD ──────────────────────────────────────
+
+    private final com.university.portal.repository.UserRepository userRepository;
+    private final com.university.portal.repository.CourseRepository courseRepository;
+    private final org.springframework.security.crypto.password.PasswordEncoder passwordEncoder;
+
+    @GetMapping("/users")
+    public ResponseEntity<?> getAllUsers() {
+        return ResponseEntity.ok(userRepository.findAll());
+    }
+
+    @PostMapping("/users")
+    public ResponseEntity<?> createUser(@RequestBody com.university.portal.entity.User user) {
+        if (userRepository.existsByEmail(user.getEmail())) {
+            return ResponseEntity.badRequest().body(Map.of("error", "Email already exists"));
+        }
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+
+        // Generate studentId if student
+        if (user.getRole() == com.university.portal.entity.User.Role.STUDENT && user.getStudentId() == null) {
+            long count = userRepository.count();
+            user.setStudentId("STU" + String.format("%03d", count + 1));
+        }
+
+        return ResponseEntity.ok(userRepository.save(user));
+    }
+
+    @PutMapping("/users/{id}")
+    public ResponseEntity<?> updateUser(@PathVariable Long id, @RequestBody com.university.portal.entity.User user) {
+        return userRepository.findById(id)
+                .map(existing -> {
+                    existing.setName(user.getName());
+                    existing.setEmail(user.getEmail());
+                    existing.setRole(user.getRole());
+                    existing.setDepartment(user.getDepartment());
+                    if (user.getPassword() != null && !user.getPassword().isEmpty()) {
+                        existing.setPassword(passwordEncoder.encode(user.getPassword()));
+                    }
+                    // Handle studentId update if needed, but usually it's static
+                    return ResponseEntity.ok(userRepository.save(existing));
+                })
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    @DeleteMapping("/users/{id}")
+    public ResponseEntity<?> deleteUser(@PathVariable Long id) {
+        if (!userRepository.existsById(id)) {
+            return ResponseEntity.notFound().build();
+        }
+        userRepository.deleteById(id);
+        return ResponseEntity.ok(Map.of("message", "User deleted successfully"));
+    }
+
+    // ── Courses CRUD ────────────────────────────────────
+
+    @GetMapping("/courses")
+    public ResponseEntity<?> getAllCourses() {
+        return ResponseEntity.ok(courseRepository.findAll());
+    }
+
+    @PostMapping("/courses")
+    public ResponseEntity<?> createCourse(@RequestBody com.university.portal.entity.Course course) {
+        if (courseRepository.findByCourseId(course.getCourseId()).isPresent()) {
+            return ResponseEntity.badRequest().body(Map.of("error", "Course ID already exists"));
+        }
+        return ResponseEntity.ok(courseRepository.save(course));
+    }
+
+    @PutMapping("/courses/{id}")
+    public ResponseEntity<?> updateCourse(@PathVariable Long id,
+            @RequestBody com.university.portal.entity.Course course) {
+        return courseRepository.findById(id)
+                .map(existing -> {
+                    existing.setName(course.getName());
+                    existing.setDepartment(course.getDepartment());
+                    existing.setDuration(course.getDuration());
+                    existing.setDegree(course.getDegree());
+                    existing.setDescription(course.getDescription());
+                    // existing.setCourseId(course.getCourseId()); // Usually don't update ID
+                    return ResponseEntity.ok(courseRepository.save(existing));
+                })
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    @DeleteMapping("/courses/{id}")
+    public ResponseEntity<?> deleteCourse(@PathVariable Long id) {
+        if (!courseRepository.existsById(id)) {
+            return ResponseEntity.notFound().build();
+        }
+        courseRepository.deleteById(id);
+        return ResponseEntity.ok(Map.of("message", "Course deleted successfully"));
+    }
 }

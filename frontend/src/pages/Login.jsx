@@ -107,6 +107,9 @@ export default function Login() {
                     </form>
 
                     <div className="login-footer">
+                        <p style={{ marginBottom: '1rem' }}>
+                            Don't have an account? <Link to="/register" style={{ fontWeight: 600 }}>Register here</Link>
+                        </p>
                         <p className="login-switch">
                             {isStudent ? (
                                 <>Are you faculty? <Link to="/login/faculty">Faculty Login →</Link></>

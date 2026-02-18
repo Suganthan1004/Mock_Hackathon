@@ -27,6 +27,9 @@ export const authAPI = {
 
     /** GET /api/auth/me – Get logged-in user info */
     me: () => api.get('/auth/me'),
+
+    /** POST /api/auth/register – Register a new user */
+    register: (userData) => api.post('/auth/register', userData),
 };
 
 // ──────────────────────────────────────────
@@ -87,6 +90,9 @@ export const assignmentAPI = {
 
     /** GET /api/assignments/student/{studentId} – Student submissions */
     getByStudent: (studentId) => api.get(`/assignments/student/${studentId}`),
+
+    /** GET /api/assignments/download/{submissionId} – Download submission file */
+    downloadSubmission: (id) => api.get(`/assignments/download/${id}`, { responseType: 'blob' }),
 };
 
 // ──────────────────────────────────────────
@@ -146,6 +152,18 @@ export const adminAPI = {
 
     /** DELETE /api/admin/news/{id} – Delete news */
     deleteNews: (id) => api.delete(`/admin/news/${id}`),
+
+    // ── Users Management ──
+    getUsers: () => api.get('/admin/users'),
+    createUser: (user) => api.post('/admin/users', user),
+    updateUser: (id, user) => api.put(`/admin/users/${id}`, user),
+    deleteUser: (id) => api.delete(`/admin/users/${id}`),
+
+    // ── Courses Management ──
+    getCourses: () => api.get('/admin/courses'),
+    createCourse: (course) => api.post('/admin/courses', course),
+    updateCourse: (id, course) => api.put(`/admin/courses/${id}`, course),
+    deleteCourse: (id) => api.delete(`/admin/courses/${id}`),
 };
 
 export default api;

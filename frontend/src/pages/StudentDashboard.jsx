@@ -105,10 +105,11 @@ export default function StudentDashboard() {
                 </div>
 
                 {/* Assignments Table */}
+                {/* Assignments Table */}
                 <div className="dashboard-section glass-card animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
                     <div className="section-header">
                         <h3><FiFileText size={16} style={{ marginRight: 4 }} /> Recent Assignments</h3>
-                        <Link to="/student/assignments" className="btn btn-secondary" style={{ padding: '8px 16px', fontSize: '0.85rem' }}>View All →</Link>
+                        <Link to="/student/all-assignments" className="btn btn-secondary" style={{ padding: '8px 16px', fontSize: '0.85rem' }}>View All →</Link>
                     </div>
                     {loading ? (
                         <div style={{ textAlign: 'center', padding: 40 }}><div className="spinner" style={{ margin: '0 auto' }}></div></div>
@@ -126,22 +127,52 @@ export default function StudentDashboard() {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {assignments.map((a) => {
+                                    {assignments.slice(0, 5).map((a) => {
                                         const st = statusMap[(a.status || '').toLowerCase()] || statusMap[(a.status || '').toUpperCase()] || { label: a.status, class: 'badge-info' };
+                                        const dueDate = a.dueDate ? new Date(a.dueDate) : null;
+                                        const today = new Date();
+                                        today.setHours(0, 0, 0, 0);
+                                        const isLate = dueDate && today > dueDate;
+
                                         return (
                                             <tr key={a.id}>
                                                 <td><strong>{a.title}</strong></td>
                                                 <td>{a.course || a.courseId}</td>
-                                                <td>{a.dueDate ? new Date(a.dueDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : '—'}</td>
+                                                <td>{dueDate ? dueDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : '—'}</td>
                                                 <td><span className={`badge ${st.class}`}>{st.label}</span></td>
                                                 <td>{a.score != null ? `${a.score}%` : '—'}</td>
                                                 <td>
                                                     {(a.status || '').toLowerCase() === 'pending' ? (
-                                                        <Link to="/student/assignments" className="btn btn-accent" style={{ padding: '6px 14px', fontSize: '0.8rem' }}>Submit</Link>
+                                                        <Link
+                                                            to="/student/assignments"
+                                                            state={{ courseId: a.course || a.courseId, assignmentId: a.assignmentId || a.id }}
+                                                            className="btn btn-accent"
+                                                            style={{ padding: '6px 14px', fontSize: '0.8rem' }}
+                                                        >
+                                                            Submit
+                                                        </Link>
                                                     ) : (a.status || '').toLowerCase() === 'evaluated' ? (
                                                         <Link to={`/student/feedback/${a.submissionId || a.id}`} className="btn btn-secondary" style={{ padding: '6px 14px', fontSize: '0.8rem' }}>View Feedback</Link>
                                                     ) : (
-                                                        <span style={{ color: 'var(--light-gray)', fontSize: '0.85rem' }}>Awaiting Review</span>
+                                                        !isLate ? (
+                                                            <Link
+                                                                to="/student/assignments"
+                                                                state={{ courseId: a.course || a.courseId, assignmentId: a.assignmentId || a.id }}
+                                                                className="btn btn-primary"
+                                                                style={{ padding: '6px 14px', fontSize: '0.8rem', background: 'transparent', border: '1px solid var(--primary-color)', color: 'var(--primary-color)' }}
+                                                            >
+                                                                View / Resubmit
+                                                            </Link>
+                                                        ) : (
+                                                            <Link
+                                                                to="/student/assignments"
+                                                                state={{ courseId: a.course || a.courseId, assignmentId: a.assignmentId || a.id }}
+                                                                className="btn btn-secondary"
+                                                                style={{ padding: '6px 14px', fontSize: '0.8rem' }}
+                                                            >
+                                                                View Submission
+                                                            </Link>
+                                                        )
                                                     )}
                                                 </td>
                                             </tr>
