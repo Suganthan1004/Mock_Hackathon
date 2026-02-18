@@ -7,7 +7,10 @@ import java.util.List;
 
 public interface AttendanceRepository extends JpaRepository<Attendance, Long> {
     List<Attendance> findByCourseIdAndDate(String courseId, LocalDate date);
+
     List<Attendance> findByCourseIdAndDateBetween(String courseId, LocalDate from, LocalDate to);
+
     List<Attendance> findByStudentId(String studentId);
+
     List<Attendance> findByCourseId(String courseId);
 }

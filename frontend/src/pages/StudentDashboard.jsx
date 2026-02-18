@@ -17,10 +17,10 @@ const statusMap = {
 
 // Fallback mock data
 const fallbackAssignments = [
-    { id: 1, title: 'Data Structures Lab - Linked Lists', course: 'CS201', status: 'submitted', score: 85, dueDate: '2026-02-20' },
+    { id: 1, title: 'Data Structures Lab - Linked Lists', course: 'CS201', status: 'submitted', score: 85, dueDate: '2026-02-20', fileName: 'linked_lists_lab.pdf', submittedAt: '2026-02-18T10:30:00' },
     { id: 2, title: 'Machine Learning Project Proposal', course: 'CS301', status: 'pending', score: null, dueDate: '2026-03-01' },
-    { id: 3, title: 'Database Design - ER Diagrams', course: 'CS202', status: 'evaluated', score: 92, dueDate: '2026-02-15' },
-    { id: 4, title: 'Web Development - React App', course: 'CS305', status: 'submitted', score: null, dueDate: '2026-02-25' },
+    { id: 3, title: 'Database Design - ER Diagrams', course: 'CS202', status: 'evaluated', score: 92, dueDate: '2026-02-15', fileName: 'er_diagrams.docx', submittedAt: '2026-02-14T14:20:00' },
+    { id: 4, title: 'Web Development - React App', course: 'CS305', status: 'submitted', score: null, dueDate: '2026-02-25', fileName: 'react_app_submission.pdf', submittedAt: '2026-02-17T09:15:00' },
     { id: 5, title: 'Computer Networks - TCP/IP', course: 'CS204', status: 'pending', score: null, dueDate: '2026-03-05' },
 ];
 
@@ -105,7 +105,6 @@ export default function StudentDashboard() {
                 </div>
 
                 {/* Assignments Table */}
-                {/* Assignments Table */}
                 <div className="dashboard-section glass-card animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
                     <div className="section-header">
                         <h3><FiFileText size={16} style={{ marginRight: 4 }} /> Recent Assignments</h3>
@@ -122,6 +121,7 @@ export default function StudentDashboard() {
                                         <th>Course</th>
                                         <th>Due Date</th>
                                         <th>Status</th>
+                                        <th>Uploaded File</th>
                                         <th>Score</th>
                                         <th>Action</th>
                                     </tr>
@@ -140,6 +140,7 @@ export default function StudentDashboard() {
                                                 <td>{a.course || a.courseId}</td>
                                                 <td>{dueDate ? dueDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : '—'}</td>
                                                 <td><span className={`badge ${st.class}`}>{st.label}</span></td>
+                                                <td style={{ fontSize: '0.85rem' }}>{a.fileName ? a.fileName : <span style={{ color: 'var(--light-gray)' }}>—</span>}</td>
                                                 <td>{a.score != null ? `${a.score}%` : '—'}</td>
                                                 <td>
                                                     {(a.status || '').toLowerCase() === 'pending' ? (
@@ -161,17 +162,10 @@ export default function StudentDashboard() {
                                                                 className="btn btn-primary"
                                                                 style={{ padding: '6px 14px', fontSize: '0.8rem', background: 'transparent', border: '1px solid var(--primary-color)', color: 'var(--primary-color)' }}
                                                             >
-                                                                View / Resubmit
+                                                                Change File
                                                             </Link>
                                                         ) : (
-                                                            <Link
-                                                                to="/student/assignments"
-                                                                state={{ courseId: a.course || a.courseId, assignmentId: a.assignmentId || a.id }}
-                                                                className="btn btn-secondary"
-                                                                style={{ padding: '6px 14px', fontSize: '0.8rem' }}
-                                                            >
-                                                                View Submission
-                                                            </Link>
+                                                            <span style={{ color: 'var(--light-gray)', fontSize: '0.85rem' }}>Awaiting Review</span>
                                                         )
                                                     )}
                                                 </td>

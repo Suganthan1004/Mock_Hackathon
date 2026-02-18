@@ -17,8 +17,6 @@ import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.UrlResource;
 
 @RestController
 @RequestMapping("/api/assignments")
@@ -157,31 +155,5 @@ public class AssignmentController {
         }).collect(Collectors.toList());
 
         return ResponseEntity.ok(result);
-    }
-
-    @GetMapping("/download/{submissionId}")
-    public ResponseEntity<?> downloadAssignment(@PathVariable Long submissionId) {
-        Submission submission = submissionRepository.findById(submissionId).orElse(null);
-        if (submission == null) {
-            return ResponseEntity.badRequest().body(Map.of("error", "Submission not found"));
-        }
-
-        try {
-            Path filePath = Paths.get(submission.getFileUrl());
-            if (!Files.exists(filePath)) {
-                return ResponseEntity.badRequest().body(Map.of("error", "File not found on server"));
-            }
-
-            Resource resource = new UrlResource(filePath.toUri());
-
-            return ResponseEntity.ok()
-                    .header(org.springframework.http.HttpHeaders.CONTENT_DISPOSITION,
-                            "attachment; filename=\"" + submission.getFileName() + "\"")
-                    .body(resource);
-
-        } catch (Exception e) {
-            return ResponseEntity.internalServerError()
-                    .body(Map.of("error", "Error downloading file: " + e.getMessage()));
-        }
     }
 }

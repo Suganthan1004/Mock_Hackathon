@@ -40,12 +40,6 @@ export default function AssignmentSubmission() {
 
     const [submissions, setSubmissions] = useState([]);
 
-    const fallbackSubmissions = [
-        { id: 101, assignmentId: 1, courseId: 'CS201', studentId: 'STU001', fileName: 'lab1_linked_lists.pdf', status: 'SUBMITTED', score: 85, submittedAt: '2026-02-18T10:30:00' },
-        { id: 103, assignmentId: 3, courseId: 'CS202', studentId: 'STU001', fileName: 'db_design_v2.pdf', status: 'EVALUATED', score: 92, submittedAt: '2026-02-14T15:45:00' },
-        { id: 104, assignmentId: 4, courseId: 'CS305', studentId: 'STU001', fileName: 'react_project_final.zip', status: 'SUBMITTED', score: null, submittedAt: '2026-02-24T09:20:00' },
-    ];
-
     // Fetch courses and student submissions
     useEffect(() => {
         // Fetch courses
@@ -58,19 +52,16 @@ export default function AssignmentSubmission() {
             .catch(() => { /* use fallback */ });
 
         // Fetch student submissions
-        const studentId = user?.id || 'STU001';
-        assignmentAPI.getByStudent(studentId)
-            .then(res => {
-                if (res.data && Array.isArray(res.data) && res.data.length > 0) {
-                    setSubmissions(res.data);
-                } else {
-                    setSubmissions(fallbackSubmissions);
-                }
-            })
-            .catch(err => {
-                console.error("Failed to fetch submissions, using fallback", err);
-                setSubmissions(fallbackSubmissions);
-            });
+        const studentId = user?.id; // Assuming user.id corresponds to studentId or we use 'STU001' as fallback
+        if (studentId || true) { // Always fetch for now with fallback ID if needed
+            // In real app, use actual ID. For now, use 'STU001' as consistent with other parts if user.id missing
+            const sid = studentId || 'STU001';
+            assignmentAPI.getByStudent(sid)
+                .then(res => {
+                    if (res.data) setSubmissions(res.data);
+                })
+                .catch(err => console.error("Failed to fetch submissions", err));
+        }
     }, [user]);
 
     // Fetch assignments when course is selected
@@ -257,37 +248,9 @@ export default function AssignmentSubmission() {
                                                         <FiCheckCircle style={{ marginRight: 5 }} />
                                                         <strong>Current Submission:</strong> {existing.fileName}
                                                     </p>
-                                                    <div className="submission-status glass-card">
-                                                        <h3>Current Submission</h3>
-                                                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                                            <div>
-                                                                <p><strong>File:</strong> {existing.fileName}</p>
-                                                                <p><strong>Submitted on:</strong> {new Date(existing.submittedAt).toLocaleString()}</p>
-                                                                {existing.score && <p><strong>Score:</strong> {existing.score}%</p>}
-                                                            </div>
-                                                            <button
-                                                                onClick={async () => {
-                                                                    try {
-                                                                        const res = await assignmentAPI.downloadSubmission(existing.id);
-                                                                        const url = window.URL.createObjectURL(new Blob([res.data]));
-                                                                        const link = document.createElement('a');
-                                                                        link.href = url;
-                                                                        link.setAttribute('download', existing.fileName);
-                                                                        document.body.appendChild(link);
-                                                                        link.click();
-                                                                        link.remove();
-                                                                    } catch (err) {
-                                                                        console.error('Download failed', err);
-                                                                        alert('Failed to download file');
-                                                                    }
-                                                                }}
-                                                                className="btn btn-secondary"
-                                                                style={{ fontSize: '0.9rem', padding: '6px 12px' }}
-                                                            >
-                                                                ⬇️ Download
-                                                            </button>
-                                                        </div>
-                                                    </div>
+                                                    <p style={{ margin: '5px 0 0', fontSize: '0.8rem', opacity: 0.8 }}>
+                                                        Submitted on: {new Date(existing.submittedAt).toLocaleString()}
+                                                    </p>
                                                 </div>
                                             )}
 

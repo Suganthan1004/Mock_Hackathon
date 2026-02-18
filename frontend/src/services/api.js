@@ -90,9 +90,6 @@ export const assignmentAPI = {
 
     /** GET /api/assignments/student/{studentId} – Student submissions */
     getByStudent: (studentId) => api.get(`/assignments/student/${studentId}`),
-
-    /** GET /api/assignments/download/{submissionId} – Download submission file */
-    downloadSubmission: (id) => api.get(`/assignments/download/${id}`, { responseType: 'blob' }),
 };
 
 // ──────────────────────────────────────────

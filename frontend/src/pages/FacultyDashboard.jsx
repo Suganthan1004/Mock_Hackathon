@@ -117,11 +117,21 @@ export default function FacultyDashboard() {
                                                 )}
                                             </td>
                                             <td>
-                                                {c.todayAttendance == null ? (
-                                                    <Link to="/faculty/attendance" className="btn btn-accent" style={{ padding: '6px 14px', fontSize: '0.8rem' }}>Mark Now</Link>
-                                                ) : (
-                                                    <Link to="/faculty/reports" className="btn btn-secondary" style={{ padding: '6px 14px', fontSize: '0.8rem' }}>View Report</Link>
-                                                )}
+                                                <div style={{ display: 'flex', gap: 8 }}>
+                                                    {c.todayAttendance == null ? (
+                                                        <Link to="/faculty/attendance" className="btn btn-accent" style={{ padding: '6px 14px', fontSize: '0.8rem' }}>Mark Now</Link>
+                                                    ) : (
+                                                        <Link to="/faculty/reports" className="btn btn-secondary" style={{ padding: '6px 14px', fontSize: '0.8rem' }}>View Report</Link>
+                                                    )}
+                                                    <Link
+                                                        to="/faculty/submissions"
+                                                        state={{ courseId: c.course || c.courseId }}
+                                                        className="btn btn-primary"
+                                                        style={{ padding: '6px 14px', fontSize: '0.8rem', background: 'transparent', border: '1px solid var(--primary-color)', color: 'var(--primary-color)' }}
+                                                    >
+                                                        Submissions
+                                                    </Link>
+                                                </div>
                                             </td>
                                         </tr>
                                     ))}
