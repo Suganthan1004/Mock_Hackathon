@@ -1,6 +1,9 @@
 import { useState } from 'react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { FiSettings, FiLock, FiKey } from 'react-icons/fi';
+import { HiOutlineAcademicCap } from 'react-icons/hi';
+import { LuUsers } from 'react-icons/lu';
 import './Login.css';
 
 export default function Login() {
@@ -51,7 +54,7 @@ export default function Login() {
             <div className="login-container">
                 <div className="login-card glass-card animate-fade-in-up">
                     <div className="login-header">
-                        <div className="login-icon">{isAdmin ? '⚙️' : isStudent ? '🎓' : '🧑‍🏫'}</div>
+                        <div className="login-icon">{isAdmin ? <FiSettings size={28} /> : isStudent ? <HiOutlineAcademicCap size={28} /> : <LuUsers size={28} />}</div>
                         <h2>{isAdmin ? 'Admin' : isStudent ? 'Student' : 'Faculty'} Login</h2>
                         <p className="login-subtitle">Sign in to access your portal</p>
                     </div>
@@ -115,14 +118,14 @@ export default function Login() {
                         </p>
                         {!isAdmin && (
                             <p className="login-switch" style={{ marginTop: '0.25rem' }}>
-                                <Link to="/login/admin">🔒 Admin Login →</Link>
+                                <Link to="/login/admin"><FiLock size={14} style={{ marginRight: 4 }} /> Admin Login →</Link>
                             </p>
                         )}
                     </div>
 
                     {/* Demo credentials */}
                     <div className="demo-credentials">
-                        <p className="demo-title">🔑 Demo Credentials</p>
+                        <p className="demo-title"><FiKey size={14} style={{ marginRight: 4 }} /> Demo Credentials</p>
                         {isAdmin ? (
                             <p>Email: <code>admin@veltech.edu</code> | Password: <code>admin123</code></p>
                         ) : isStudent ? (

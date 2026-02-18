@@ -1,13 +1,18 @@
 import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { useTheme } from '../context/ThemeContext';
 import ConfirmDialog from './ConfirmDialog';
+import { FiSun, FiMoon, FiLogOut, FiGrid, FiSettings } from 'react-icons/fi';
+import { HiOutlineAcademicCap } from 'react-icons/hi';
+import { LuUsers } from 'react-icons/lu';
 import './Navbar.css';
 
 export default function Navbar() {
     const [menuOpen, setMenuOpen] = useState(false);
     const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
     const { user, logout } = useAuth();
+    const { theme, toggleTheme } = useTheme();
     const location = useLocation();
 
     const isActive = (path) => location.pathname === path;
@@ -73,7 +78,7 @@ export default function Navbar() {
                                         className={`navbar-link portal-link ${isActive('/login/student') ? 'active' : ''}`}
                                         onClick={() => setMenuOpen(false)}
                                     >
-                                        🎓 Student Portal
+                                        <HiOutlineAcademicCap style={{ marginRight: 4 }} /> Student Portal
                                     </Link>
                                 </li>
                                 <li>
@@ -82,7 +87,7 @@ export default function Navbar() {
                                         className={`navbar-link portal-link ${isActive('/login/faculty') ? 'active' : ''}`}
                                         onClick={() => setMenuOpen(false)}
                                     >
-                                        🧑‍🏫 Faculty Portal
+                                        <LuUsers style={{ marginRight: 4 }} /> Faculty Portal
                                     </Link>
                                 </li>
                             </>
@@ -98,17 +103,26 @@ export default function Navbar() {
                                             }`}
                                         onClick={() => setMenuOpen(false)}
                                     >
-                                        {user.role === 'ADMIN' ? '⚙️ Admin Panel' : '📊 Dashboard'}
+                                        {user.role === 'ADMIN' ? <><FiSettings style={{ marginRight: 4 }} /> Admin Panel</> : <><FiGrid style={{ marginRight: 4 }} /> Dashboard</>}
                                     </Link>
                                 </li>
                                 <li>
                                     <button className="navbar-link logout-btn" onClick={handleLogout}>
-                                        Logout
+                                        <FiLogOut style={{ marginRight: 4 }} /> Logout
                                     </button>
                                 </li>
                             </>
                         )}
                     </ul>
+
+                    <button
+                        className="theme-toggle"
+                        onClick={toggleTheme}
+                        aria-label="Toggle theme"
+                        title={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+                    >
+                        {theme === 'dark' ? <FiSun /> : <FiMoon />}
+                    </button>
 
                     {user && (
                         <div className="navbar-user">

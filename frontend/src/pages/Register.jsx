@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { FiUserPlus, FiAlertTriangle, FiCheckCircle } from 'react-icons/fi';
 import './Login.css';
 
 export default function Register() {
@@ -50,15 +51,15 @@ export default function Register() {
             <div className="login-container" style={{ maxWidth: 480 }}>
                 <div className="login-card glass-card animate-fade-in-up">
                     <div className="login-header">
-                        <div className="login-icon">📝</div>
+                        <div className="login-icon"><FiUserPlus size={28} /></div>
                         <h2>Create Account</h2>
                         <p className="login-subtitle">Register for the University Portal</p>
                     </div>
 
-                    {error && <div className="login-error animate-fade-in">⚠️ {error}</div>}
+                    {error && <div className="login-error animate-fade-in"><FiAlertTriangle size={14} style={{ marginRight: 4 }} /> {error}</div>}
                     {success && (
                         <div className="login-error animate-fade-in" style={{ background: 'rgba(100,255,218,0.1)', borderColor: 'rgba(100,255,218,0.3)', color: 'var(--accent-blue)' }}>
-                            ✅ Registration successful! Redirecting to login...
+                            <FiCheckCircle size={14} style={{ marginRight: 4 }} /> Registration successful! Redirecting to login...
                         </div>
                     )}
 

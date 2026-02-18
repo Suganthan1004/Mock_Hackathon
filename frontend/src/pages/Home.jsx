@@ -1,6 +1,10 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { universityAPI } from '../services/api';
+import { HiOutlineAcademicCap } from 'react-icons/hi';
+import { LuUsers } from 'react-icons/lu';
+import { FiLock, FiVolume2 } from 'react-icons/fi';
+import { BsBuildings } from 'react-icons/bs';
 import './Home.css';
 
 export default function Home() {
@@ -45,7 +49,7 @@ export default function Home() {
                 <div className="hero-bg"></div>
                 <div className="hero-content container">
                     <div className="hero-text animate-fade-in-up">
-                        <span className="hero-badge">🏛️ Welcome to</span>
+                        <span className="hero-badge"><BsBuildings style={{ marginRight: 4 }} /> Welcome to</span>
                         <h1 className="hero-title">Vel Tech University</h1>
                         <p className="hero-subtitle">
                             Empowering the next generation of leaders through world-class education,
@@ -53,13 +57,13 @@ export default function Home() {
                         </p>
                         <div className="hero-actions">
                             <Link to="/login/student" className="btn btn-primary">
-                                🎓 Student Portal
+                                <HiOutlineAcademicCap style={{ marginRight: 4 }} /> Student Portal
                             </Link>
                             <Link to="/login/faculty" className="btn btn-secondary">
-                                🧑‍🏫 Faculty Portal
+                                <LuUsers style={{ marginRight: 4 }} /> Faculty Portal
                             </Link>
-                            <Link to="/login/admin" className="btn btn-secondary" style={{ background: 'rgba(240, 192, 64, 0.15)', borderColor: '#f0c040', color: '#f0c040' }}>
-                                🔒 Admin Portal
+                            <Link to="/login/admin" className="btn btn-secondary" style={{ background: 'rgba(59, 130, 246, 0.1)', borderColor: '#3b82f6', color: '#93c5fd' }}>
+                                <FiLock style={{ marginRight: 4 }} /> Admin Portal
                             </Link>
                         </div>
                     </div>
@@ -88,7 +92,7 @@ export default function Home() {
             {/* Announcements Ticker */}
             <section className="announcements-bar">
                 <div className="container announcements-content">
-                    <span className="announcement-label">📢 Announcement</span>
+                    <span className="announcement-label"><FiVolume2 style={{ marginRight: 4 }} /> Announcement</span>
                     <p className="announcement-text" key={currentAnnouncement}>
                         {announcements[currentAnnouncement]}
                     </p>

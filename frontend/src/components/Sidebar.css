@@ -74,12 +74,12 @@
 }
 
 .sidebar-link:hover {
-    background: rgba(240, 192, 64, 0.08);
+    background: rgba(59, 130, 246, 0.06);
     color: var(--accent-gold);
 }
 
 .sidebar-link.active {
-    background: rgba(240, 192, 64, 0.12);
+    background: rgba(59, 130, 246, 0.1);
     color: var(--accent-gold);
     font-weight: 600;
 }

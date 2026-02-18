@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { aiFeedbackAPI } from '../services/api';
 import Sidebar from '../components/Sidebar';
+import { FiCpu, FiClipboard, FiZap } from 'react-icons/fi';
 import './Dashboard.css';
 
 // Fallback data
@@ -63,7 +64,7 @@ export default function AIFeedback() {
                 <div className="dashboard-header animate-fade-in-up">
                     <div>
                         <Link to="/student/dashboard" style={{ color: 'var(--light-gray)', fontSize: '0.85rem' }}>← Back to Dashboard</Link>
-                        <h1 style={{ marginTop: 8 }}>🤖 AI Evaluation Report</h1>
+                        <h1 style={{ marginTop: 8 }}><FiCpu size={22} style={{ marginRight: 6 }} /> AI Evaluation Report</h1>
                         <p className="dashboard-subtitle">{feedback.assignment || 'Assignment'} — {feedback.course || feedback.courseId || ''}</p>
                     </div>
                     {feedback.submittedDate && (
@@ -90,12 +91,12 @@ export default function AIFeedback() {
 
                     <div className="glass-card feedback-card animate-fade-in-up" style={{ animationDelay: '0.4s' }}>
                         <div className="feedback-text">
-                            <h4>📋 Summary</h4>
+                            <h4><FiClipboard size={14} style={{ marginRight: 4 }} /> Summary</h4>
                             <p>{feedback.summary}</p>
                         </div>
                         {feedback.suggestions?.length > 0 && (
                             <div className="feedback-text">
-                                <h4>💡 Suggestions for Improvement</h4>
+                                <h4><FiZap size={14} style={{ marginRight: 4 }} /> Suggestions for Improvement</h4>
                                 <ul>{feedback.suggestions.map((s, i) => <li key={i}>{s}</li>)}</ul>
                             </div>
                         )}

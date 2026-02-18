@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { dashboardAPI } from '../services/api';
 import Sidebar from '../components/Sidebar';
+import { FiFileText, FiCheckSquare, FiBook, FiClipboard } from 'react-icons/fi';
+import { HiOutlineAcademicCap, HiOutlineHand } from 'react-icons/hi';
 import './Dashboard.css';
 
 // Fallback data
@@ -48,33 +50,33 @@ export default function FacultyDashboard() {
             <main className="dashboard-main">
                 <div className="dashboard-header animate-fade-in-up">
                     <div>
-                        <h1>Welcome, {user?.name?.split(' ').slice(0, 2).join(' ')}! 👋</h1>
+                        <h1>Welcome, {user?.name?.split(' ').slice(0, 2).join(' ')}!</h1>
                         <p className="dashboard-subtitle">Faculty Dashboard — {user?.department}</p>
                     </div>
                     <div style={{ display: 'flex', gap: '0.75rem' }}>
-                        <Link to="/faculty/submissions" className="btn btn-secondary">📝 View Submissions</Link>
-                        <Link to="/faculty/attendance" className="btn btn-primary">✅ Mark Attendance</Link>
+                        <Link to="/faculty/submissions" className="btn btn-secondary"><FiFileText size={16} style={{ marginRight: 4 }} /> View Submissions</Link>
+                        <Link to="/faculty/attendance" className="btn btn-primary"><FiCheckSquare size={16} style={{ marginRight: 4 }} /> Mark Attendance</Link>
                     </div>
                 </div>
 
                 {/* Stats */}
                 <div className="stats-grid animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
                     <div className="stat-card glass-card">
-                        <div className="stat-card-icon" style={{ background: 'rgba(240,192,64,0.15)' }}>📚</div>
+                        <div className="stat-card-icon" style={{ background: 'rgba(59,130,246,0.12)' }}><FiBook size={20} /></div>
                         <div>
                             <span className="stat-card-number">{classes.length}</span>
                             <span className="stat-card-label">Courses</span>
                         </div>
                     </div>
                     <div className="stat-card glass-card">
-                        <div className="stat-card-icon" style={{ background: 'rgba(100,255,218,0.15)' }}>🎓</div>
+                        <div className="stat-card-icon" style={{ background: 'rgba(34,197,94,0.12)' }}><HiOutlineAcademicCap size={20} /></div>
                         <div>
                             <span className="stat-card-number">{totalStudents}</span>
                             <span className="stat-card-label">Total Students</span>
                         </div>
                     </div>
                     <div className="stat-card glass-card">
-                        <div className="stat-card-icon" style={{ background: 'rgba(167,139,250,0.15)' }}>✅</div>
+                        <div className="stat-card-icon" style={{ background: 'rgba(129,140,248,0.12)' }}><FiCheckSquare size={20} /></div>
                         <div>
                             <span className="stat-card-number">{classesMarked}/{classes.length}</span>
                             <span className="stat-card-label">Marked Today</span>
@@ -85,7 +87,7 @@ export default function FacultyDashboard() {
                 {/* Classes Table */}
                 <div className="dashboard-section glass-card animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
                     <div className="section-header">
-                        <h3>📚 My Classes</h3>
+                        <h3><FiBook size={16} style={{ marginRight: 4 }} /> My Classes</h3>
                     </div>
                     {loading ? (
                         <div style={{ textAlign: 'center', padding: 40 }}><div className="spinner" style={{ margin: '0 auto' }}></div></div>
@@ -132,7 +134,7 @@ export default function FacultyDashboard() {
                 {/* Recent Attendance */}
                 <div className="dashboard-section glass-card animate-fade-in-up" style={{ animationDelay: '0.3s' }}>
                     <div className="section-header">
-                        <h3>📋 Recent Attendance Records</h3>
+                        <h3><FiClipboard size={16} style={{ marginRight: 4 }} /> Recent Attendance Records</h3>
                         <Link to="/faculty/reports" className="btn btn-secondary" style={{ padding: '8px 16px', fontSize: '0.85rem' }}>Full Reports →</Link>
                     </div>
                     <div className="table-wrapper">

@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { dashboardAPI, facultyAPI } from '../services/api';
 import Sidebar from '../components/Sidebar';
+import { FiFileText, FiFile, FiCpu, FiClipboard, FiZap, FiEye } from 'react-icons/fi';
 import './FacultySubmissions.css';
 import './Dashboard.css';
 
@@ -63,7 +64,7 @@ export default function FacultySubmissions() {
             <main className="dashboard-main">
                 <div className="dashboard-header animate-fade-in-up">
                     <div>
-                        <h1>📝 Student Submissions</h1>
+                        <h1><FiFileText size={22} style={{ marginRight: 6 }} /> Student Submissions</h1>
                         <p className="dashboard-subtitle">Review submissions and AI feedback for your courses</p>
                     </div>
                 </div>
@@ -90,7 +91,7 @@ export default function FacultySubmissions() {
                 {/* Submissions Table */}
                 <div className="dashboard-section glass-card animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
                     <div className="section-header">
-                        <h3>📄 Submissions for {selectedCourse}</h3>
+                        <h3><FiFile size={16} style={{ marginRight: 4 }} /> Submissions for {selectedCourse}</h3>
                     </div>
                     {loading || subsLoading ? (
                         <div style={{ textAlign: 'center', padding: 40 }}>
@@ -138,7 +139,7 @@ export default function FacultySubmissions() {
                                             <td>
                                                 {s.status === 'EVALUATED' ? (
                                                     <button className="btn btn-accent btn-sm" onClick={() => viewFeedback(s.id)}>
-                                                        👁️ View
+                                                        <FiEye size={14} style={{ marginRight: 3 }} /> View
                                                     </button>
                                                 ) : (
                                                     <span style={{ color: 'var(--text-secondary)', fontSize: '0.85rem' }}>Pending</span>
@@ -158,7 +159,7 @@ export default function FacultySubmissions() {
                 <div className="modal-overlay" onClick={closeFeedback}>
                     <div className="feedback-modal animate-fade-in-up" onClick={(e) => e.stopPropagation()}>
                         <div className="modal-header">
-                            <h3>🤖 AI Feedback</h3>
+                            <h3><FiCpu size={16} style={{ marginRight: 4 }} /> AI Feedback</h3>
                             <button className="modal-close" onClick={closeFeedback}>✕</button>
                         </div>
                         {feedbackModal.loading ? (
@@ -188,13 +189,13 @@ export default function FacultySubmissions() {
                                 </div>
                                 {feedbackModal.data.summary && (
                                     <div className="feedback-section">
-                                        <h4>📋 Summary</h4>
+                                        <h4><FiClipboard size={14} style={{ marginRight: 4 }} /> Summary</h4>
                                         <p>{feedbackModal.data.summary}</p>
                                     </div>
                                 )}
                                 {feedbackModal.data.suggestions?.length > 0 && (
                                     <div className="feedback-section">
-                                        <h4>💡 Suggestions</h4>
+                                        <h4><FiZap size={14} style={{ marginRight: 4 }} /> Suggestions</h4>
                                         <ul>
                                             {feedbackModal.data.suggestions.map((s, i) => (
                                                 <li key={i}>{s}</li>

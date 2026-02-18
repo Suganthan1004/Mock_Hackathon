@@ -1,20 +1,22 @@
 import { NavLink } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { FiGrid, FiFileText, FiCheckSquare, FiClipboard } from 'react-icons/fi';
+import { HiOutlineDocumentText } from 'react-icons/hi';
 import './Sidebar.css';
 
 export default function Sidebar() {
     const { user } = useAuth();
 
     const studentLinks = [
-        { to: '/student/dashboard', icon: '📊', label: 'Dashboard' },
-        { to: '/student/assignments', icon: '📝', label: 'Assignments' },
+        { to: '/student/dashboard', icon: <FiGrid />, label: 'Dashboard' },
+        { to: '/student/assignments', icon: <HiOutlineDocumentText />, label: 'Assignments' },
     ];
 
     const facultyLinks = [
-        { to: '/faculty/dashboard', icon: '📊', label: 'Dashboard' },
-        { to: '/faculty/submissions', icon: '📝', label: 'Submissions' },
-        { to: '/faculty/attendance', icon: '✅', label: 'Mark Attendance' },
-        { to: '/faculty/reports', icon: '📋', label: 'Reports' },
+        { to: '/faculty/dashboard', icon: <FiGrid />, label: 'Dashboard' },
+        { to: '/faculty/submissions', icon: <FiFileText />, label: 'Submissions' },
+        { to: '/faculty/attendance', icon: <FiCheckSquare />, label: 'Mark Attendance' },
+        { to: '/faculty/reports', icon: <FiClipboard />, label: 'Reports' },
     ];
 
     const links = user?.role === 'STUDENT' ? studentLinks : facultyLinks;
@@ -28,7 +30,7 @@ export default function Sidebar() {
                 <div className="sidebar-info">
                     <h4 className="sidebar-name">{user?.name || 'User'}</h4>
                     <span className="sidebar-role">
-                        {user?.role === 'STUDENT' ? '🎓 Student' : '🧑‍🏫 Faculty'}
+                        {user?.role === 'STUDENT' ? 'Student' : 'Faculty'}
                     </span>
                 </div>
             </div>

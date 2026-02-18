@@ -4,6 +4,7 @@ import { useAuth } from '../context/AuthContext';
 import { courseAPI, assignmentAPI } from '../services/api';
 import { evaluateAssignment, readFileContent, isAIConfigured } from '../services/aiService';
 import Sidebar from '../components/Sidebar';
+import { FiFileText, FiFile, FiCpu, FiClipboard, FiZap, FiCheckCircle } from 'react-icons/fi';
 import './Dashboard.css';
 
 // Fallback data
@@ -175,7 +176,7 @@ export default function AssignmentSubmission() {
             <main className="dashboard-main">
                 <div className="dashboard-header animate-fade-in-up">
                     <div>
-                        <h1>📝 Submit Assignment</h1>
+                        <h1><FiFileText size={22} style={{ marginRight: 6 }} /> Submit Assignment</h1>
                         <p className="dashboard-subtitle">Upload your work for AI-powered evaluation</p>
                     </div>
                 </div>
@@ -210,7 +211,7 @@ export default function AssignmentSubmission() {
                                     <input type="file" id="fileInput" accept=".pdf,.docx,.doc,.png,.jpg,.jpeg" onChange={handleFileChange} style={{ display: 'none' }} />
                                     {file ? (
                                         <>
-                                            <span className="file-upload-icon">📄</span>
+                                            <span className="file-upload-icon"><FiFile size={28} /></span>
                                             <p className="file-name">{file.name}</p>
                                             <p className="file-upload-hint">{(file.size / 1024 / 1024).toFixed(2)} MB — Click to change</p>
                                         </>
@@ -232,7 +233,7 @@ export default function AssignmentSubmission() {
                 ) : (
                     <div className="feedback-section animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
                         <div className="success-message">
-                            ✅ Assignment submitted successfully!
+                            <FiCheckCircle size={14} style={{ marginRight: 4 }} /> Assignment submitted successfully!
                         </div>
 
                         {aiError && (
@@ -243,14 +244,14 @@ export default function AssignmentSubmission() {
 
                         {!evaluating && feedback && !aiError && isAIConfigured() && (
                             <div className="success-message" style={{ background: 'rgba(100,255,218,0.1)', borderColor: 'rgba(100,255,218,0.3)' }}>
-                                🤖 Powered by AI via OpenRouter
+                                <FiCpu size={14} style={{ marginRight: 4 }} /> Powered by AI via OpenRouter
                             </div>
                         )}
 
                         {evaluating ? (
                             <div className="glass-card" style={{ textAlign: 'center', padding: 48 }}>
                                 <div className="spinner" style={{ margin: '0 auto 20px' }}></div>
-                                <h3>🤖 AI is evaluating your submission...</h3>
+                                <h3><FiCpu size={18} style={{ marginRight: 4 }} /> AI is evaluating your submission...</h3>
                                 <p style={{ color: 'var(--light-gray)', marginTop: 8 }}>Analyzing grammar, relevance, and originality</p>
                             </div>
                         ) : feedback && (
@@ -270,15 +271,15 @@ export default function AssignmentSubmission() {
                                 </div>
                                 <div className="glass-card feedback-card animate-fade-in-up" style={{ animationDelay: '0.4s' }}>
                                     <div className="feedback-text">
-                                        <h4>📋 Summary</h4>
+                                        <h4><FiClipboard size={14} style={{ marginRight: 4 }} /> Summary</h4>
                                         <p>{feedback.summary}</p>
                                     </div>
                                     <div className="feedback-text">
-                                        <h4>💡 Suggestions for Improvement</h4>
+                                        <h4><FiZap size={14} style={{ marginRight: 4 }} /> Suggestions for Improvement</h4>
                                         <ul>{feedback.suggestions.map((s, i) => <li key={i}>{s}</li>)}</ul>
                                     </div>
                                 </div>
-                                <button className="btn btn-primary" onClick={resetForm} style={{ marginTop: 16 }}>📝 Submit Another Assignment</button>
+                                <button className="btn btn-primary" onClick={resetForm} style={{ marginTop: 16 }}><FiFileText size={14} style={{ marginRight: 4 }} /> Submit Another Assignment</button>
                             </>
                         )}
                     </div>

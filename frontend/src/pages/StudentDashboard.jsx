@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { dashboardAPI, assignmentAPI } from '../services/api';
 import Sidebar from '../components/Sidebar';
+import { FiFileText, FiBarChart2, FiClock, FiCheckCircle, FiAward } from 'react-icons/fi';
 import './Dashboard.css';
 
 const statusMap = {
@@ -65,37 +66,37 @@ export default function StudentDashboard() {
             <main className="dashboard-main">
                 <div className="dashboard-header animate-fade-in-up">
                     <div>
-                        <h1>Welcome back, {user?.name?.split(' ')[0]}! 👋</h1>
+                        <h1>Welcome back, {user?.name?.split(' ')[0]}!</h1>
                         <p className="dashboard-subtitle">Here's your academic overview</p>
                     </div>
-                    <Link to="/student/assignments" className="btn btn-primary">📝 Submit Assignment</Link>
+                    <Link to="/student/assignments" className="btn btn-primary"><FiFileText size={16} style={{ marginRight: 4 }} /> Submit Assignment</Link>
                 </div>
 
                 {/* Stats */}
                 <div className="stats-grid animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
                     <div className="stat-card glass-card">
-                        <div className="stat-card-icon" style={{ background: 'rgba(240,192,64,0.15)' }}>📊</div>
+                        <div className="stat-card-icon" style={{ background: 'rgba(59,130,246,0.12)' }}><FiBarChart2 size={20} /></div>
                         <div>
                             <span className="stat-card-number">{dashData?.totalAssignments ?? assignments.length}</span>
                             <span className="stat-card-label">Total Assignments</span>
                         </div>
                     </div>
                     <div className="stat-card glass-card">
-                        <div className="stat-card-icon" style={{ background: 'rgba(255,107,107,0.15)' }}>⏳</div>
+                        <div className="stat-card-icon" style={{ background: 'rgba(239,68,68,0.12)' }}><FiClock size={20} /></div>
                         <div>
                             <span className="stat-card-number">{dashData?.pending ?? pending}</span>
                             <span className="stat-card-label">Pending</span>
                         </div>
                     </div>
                     <div className="stat-card glass-card">
-                        <div className="stat-card-icon" style={{ background: 'rgba(100,255,218,0.15)' }}>✅</div>
+                        <div className="stat-card-icon" style={{ background: 'rgba(34,197,94,0.12)' }}><FiCheckCircle size={20} /></div>
                         <div>
                             <span className="stat-card-number">{dashData?.evaluated ?? evaluated}</span>
                             <span className="stat-card-label">Evaluated</span>
                         </div>
                     </div>
                     <div className="stat-card glass-card">
-                        <div className="stat-card-icon" style={{ background: 'rgba(167,139,250,0.15)' }}>🏆</div>
+                        <div className="stat-card-icon" style={{ background: 'rgba(129,140,248,0.12)' }}><FiAward size={20} /></div>
                         <div>
                             <span className="stat-card-number">{dashData?.avgScore ?? avgScore}%</span>
                             <span className="stat-card-label">Avg Score</span>
@@ -106,7 +107,7 @@ export default function StudentDashboard() {
                 {/* Assignments Table */}
                 <div className="dashboard-section glass-card animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
                     <div className="section-header">
-                        <h3>📝 Recent Assignments</h3>
+                        <h3><FiFileText size={16} style={{ marginRight: 4 }} /> Recent Assignments</h3>
                         <Link to="/student/assignments" className="btn btn-secondary" style={{ padding: '8px 16px', fontSize: '0.85rem' }}>View All →</Link>
                     </div>
                     {loading ? (

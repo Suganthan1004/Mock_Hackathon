@@ -1,7 +1,7 @@
 .header {
     background: var(--primary-navy);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-    padding: 16px 0;
+    border-bottom: 1px solid var(--border-color);
+    padding: 14px 0;
     position: relative;
     z-index: 100;
 }
@@ -26,7 +26,7 @@
 
 .header-logo {
     flex-shrink: 0;
-    animation: fadeIn 0.6s ease;
+    animation: fadeIn 0.4s ease;
 }
 
 .header-text {
@@ -36,19 +36,16 @@
 
 .header-title {
     font-family: var(--font-heading);
-    font-size: 1.75rem;
+    font-size: 1.6rem;
     font-weight: 800;
-    background: var(--gradient-gold);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    color: var(--white);
     letter-spacing: -0.5px;
     line-height: 1;
     margin-bottom: 4px;
 }
 
 .header-motto {
-    font-size: 0.8rem;
+    font-size: 0.78rem;
     color: var(--light-gray);
     font-weight: 400;
     letter-spacing: 0.5px;
@@ -56,7 +53,7 @@
 
 @media (max-width: 768px) {
     .header-title {
-        font-size: 1.25rem;
+        font-size: 1.2rem;
     }
 
     .header-motto {

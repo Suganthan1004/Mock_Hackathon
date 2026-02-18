@@ -1,6 +1,6 @@
 .navbar {
-    background: var(--primary-dark);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    background: rgba(11, 15, 25, 0.95);
+    border-bottom: 1px solid var(--border-color);
     position: sticky;
     top: 0;
     z-index: 999;
@@ -42,13 +42,13 @@
 }
 
 .navbar-link:hover {
-    color: var(--accent-gold);
-    background: rgba(240, 192, 64, 0.08);
+    color: var(--accent);
+    background: rgba(59, 130, 246, 0.06);
 }
 
 .navbar-link.active {
-    color: var(--accent-gold);
-    background: rgba(240, 192, 64, 0.12);
+    color: var(--accent);
+    background: rgba(59, 130, 246, 0.1);
 }
 
 .portal-link {
@@ -56,13 +56,13 @@
 }
 
 .logout-btn {
-    color: var(--accent-coral) !important;
+    color: var(--accent-danger) !important;
     font-family: var(--font-body);
 }
 
 .logout-btn:hover {
-    background: rgba(255, 107, 107, 0.1) !important;
-    color: var(--accent-coral) !important;
+    background: rgba(239, 68, 68, 0.08) !important;
+    color: var(--accent-danger) !important;
 }
 
 .navbar-user {
@@ -76,8 +76,8 @@
     width: 34px;
     height: 34px;
     border-radius: 50%;
-    background: var(--gradient-gold);
-    color: var(--primary-dark);
+    background: var(--gradient-accent);
+    color: var(--white);
     display: flex;
     align-items: center;
     justify-content: center;

@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { courseAPI, attendanceAPI } from '../services/api';
 import Sidebar from '../components/Sidebar';
+import { FiCheckSquare, FiCheckCircle, FiClock, FiSave } from 'react-icons/fi';
 import './Dashboard.css';
 
 // Fallback data
@@ -126,14 +127,14 @@ export default function AttendanceMarking() {
             <main className="dashboard-main">
                 <div className="dashboard-header animate-fade-in-up">
                     <div>
-                        <h1>✅ Mark Attendance</h1>
+                        <h1><FiCheckSquare size={22} style={{ marginRight: 6 }} /> Mark Attendance</h1>
                         <p className="dashboard-subtitle">Select a class and date to mark student attendance</p>
                     </div>
                 </div>
 
                 {submitted && (
                     <div className="success-message animate-fade-in">
-                        ✅ Attendance saved successfully! {presentCount} present, {absentCount} absent for {selectedCourse} on {new Date(selectedDate).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}.
+                        <FiCheckCircle size={14} style={{ marginRight: 4 }} /> Attendance saved successfully! {presentCount} present, {absentCount} absent for {selectedCourse} on {new Date(selectedDate).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}.
                     </div>
                 )}
 
@@ -184,7 +185,7 @@ export default function AttendanceMarking() {
                                 </div>
 
                                 <button type="submit" className="btn btn-primary" disabled={submitting} style={{ marginTop: 20, minWidth: 200 }}>
-                                    {submitting ? '⏳ Saving...' : '💾 Submit Attendance'}
+                                    {submitting ? <><FiClock size={14} style={{ marginRight: 4 }} /> Saving...</> : <><FiSave size={14} style={{ marginRight: 4 }} /> Submit Attendance</>}
                                 </button>
                             </>
                         )}
