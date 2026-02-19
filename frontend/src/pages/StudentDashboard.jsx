@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { dashboardAPI, assignmentAPI } from '../services/api';
 import Sidebar from '../components/Sidebar';
@@ -26,6 +26,7 @@ const fallbackAssignments = [
 
 export default function StudentDashboard() {
     const { user } = useAuth();
+    const location = useLocation();
     const [assignments, setAssignments] = useState(fallbackAssignments);
     const [dashData, setDashData] = useState(null);
     const [loading, setLoading] = useState(true);
@@ -39,7 +40,9 @@ export default function StudentDashboard() {
                 // GET /api/dashboard/student/{studentId}
                 const dashRes = await dashboardAPI.getStudent(studentId);
                 if (dashRes.data) setDashData(dashRes.data);
-            } catch { /* use fallback */ }
+            } catch (err) {
+                console.log('Dashboard API unavailable, using fallback data');
+            }
 
             try {
                 // GET /api/assignments/student/{studentId}
@@ -47,13 +50,15 @@ export default function StudentDashboard() {
                 if (assignRes.data && Array.isArray(assignRes.data) && assignRes.data.length > 0) {
                     setAssignments(assignRes.data);
                 }
-            } catch { /* use fallback */ }
+            } catch (err) {
+                console.log('Assignments API unavailable, using fallback data');
+            }
 
             setLoading(false);
         };
 
         fetchData();
-    }, [user]);
+    }, [user, location.key]); // location.key changes on every navigation, forcing re-fetch
 
     const submitted = assignments.filter(a => (a.status || '').toLowerCase() === 'submitted').length;
     const pending = assignments.filter(a => (a.status || '').toLowerCase() === 'pending').length;
@@ -73,33 +78,33 @@ export default function StudentDashboard() {
                     <Link to="/student/assignments" className="btn btn-primary"><FiFileText size={16} style={{ marginRight: 4 }} /> Submit Assignment</Link>
                 </div>
 
-                {/* Stats */}
+                {/* Stats — use locally computed stats from assignments array, supplemented by dashData when it has meaningful values */}
                 <div className="stats-grid animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
                     <div className="stat-card glass-card">
                         <div className="stat-card-icon" style={{ background: 'rgba(59,130,246,0.12)' }}><FiBarChart2 size={20} /></div>
                         <div>
-                            <span className="stat-card-number">{dashData?.totalAssignments ?? assignments.length}</span>
+                            <span className="stat-card-number">{dashData?.totalAssignments || assignments.length}</span>
                             <span className="stat-card-label">Total Assignments</span>
                         </div>
                     </div>
                     <div className="stat-card glass-card">
                         <div className="stat-card-icon" style={{ background: 'rgba(239,68,68,0.12)' }}><FiClock size={20} /></div>
                         <div>
-                            <span className="stat-card-number">{dashData?.pending ?? pending}</span>
+                            <span className="stat-card-number">{dashData?.pending || pending}</span>
                             <span className="stat-card-label">Pending</span>
                         </div>
                     </div>
                     <div className="stat-card glass-card">
                         <div className="stat-card-icon" style={{ background: 'rgba(34,197,94,0.12)' }}><FiCheckCircle size={20} /></div>
                         <div>
-                            <span className="stat-card-number">{dashData?.evaluated ?? evaluated}</span>
+                            <span className="stat-card-number">{dashData?.evaluated || evaluated}</span>
                             <span className="stat-card-label">Evaluated</span>
                         </div>
                     </div>
                     <div className="stat-card glass-card">
                         <div className="stat-card-icon" style={{ background: 'rgba(129,140,248,0.12)' }}><FiAward size={20} /></div>
                         <div>
-                            <span className="stat-card-number">{dashData?.avgScore ?? avgScore}%</span>
+                            <span className="stat-card-number">{dashData?.avgScore || avgScore}%</span>
                             <span className="stat-card-label">Avg Score</span>
                         </div>
                     </div>
