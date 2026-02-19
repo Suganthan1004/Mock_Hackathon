@@ -1,7 +1,7 @@
 # Backend Documentation — Vel Tech University Portal
 
 > **Tech Stack:** Spring Boot 3.2 · Java 17 · MySQL · Spring Security (JWT) · Hibernate/JPA
-> **Server Port:** `8081` · **Base URL:** `http://localhost:8081/api`
+> **Server Port:** `8081` · **Base URL:** `http://mock-hackathon.onrender.com/api`
 
 ---
 

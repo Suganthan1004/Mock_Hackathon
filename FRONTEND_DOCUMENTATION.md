@@ -1,7 +1,7 @@
 # Frontend Documentation — Vel Tech University Portal
 
 > **Tech Stack:** React 19 + Vite 7 · React Router DOM 7 · Axios · react-icons  
-> **Dev Server:** `http://localhost:5173` · **Backend API:** `http://localhost:8081/api`
+> **Dev Server:** `http://localhost:5173` · **Backend API:** `http://mock-hackathon.onrender.com/api`
 
 ---
 
@@ -168,7 +168,7 @@ Contains the `.app` container's flex layout and `.app-content` minimum height to
 ### `api.js`
 **Lines:** 152 · **Purpose:** Centralized HTTP client & all API endpoint functions
 
-**Base URL:** `http://localhost:8081/api`
+**Base URL:** `http://mock-hackathon.onrender.com/api`
 
 Creates an Axios instance with:
 - Default `Content-Type: application/json`

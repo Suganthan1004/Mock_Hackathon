@@ -2,7 +2,7 @@
 
 This guide provides step-by-step instructions to test the backend APIs.
 
-**Base URL:** `http://localhost:8081/api`
+**Base URL:** `http://mock-hackathon.onrender.com/api`
 
 ---
 
@@ -21,7 +21,7 @@ You **must** login first to get an access token for protected endpoints.
 
 ### Login (Student)
 -   **Method:** `POST`
--   **URL:** `{{base_url}}/auth/login` (or `http://localhost:8081/api/auth/login`)
+-   **URL:** `{{base_url}}/auth/login` (or `http://mock-hackathon.onrender.com/api/auth/login`)
 -   **Body** (raw JSON):
     ```json
     {
