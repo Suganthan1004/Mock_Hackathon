@@ -1,0 +1,11 @@
+# Maven
+backend/target/
+**/target/
+
+# Node
+node_modules/
+dist/
+build/
+
+# OS
+.DS_Store
