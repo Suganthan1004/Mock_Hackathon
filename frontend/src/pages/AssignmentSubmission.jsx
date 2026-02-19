@@ -4,7 +4,7 @@ import { useAuth } from '../context/AuthContext';
 import { courseAPI, assignmentAPI } from '../services/api';
 import { evaluateAssignment, readFileContent, isAIConfigured } from '../services/aiService';
 import Sidebar from '../components/Sidebar';
-import { FiFileText, FiFile, FiCpu, FiClipboard, FiZap, FiCheckCircle } from 'react-icons/fi';
+import { FiFileText, FiFile, FiCpu, FiClipboard, FiZap, FiCheckCircle, FiArrowLeft } from 'react-icons/fi';
 import './Dashboard.css';
 
 // Fallback data
@@ -165,6 +165,25 @@ export default function AssignmentSubmission() {
 
         setSubmitted(true);
         setSubmitting(false);
+
+        // Update local submissions list to reflect the new submission immediately
+        const newSubmission = {
+            assignmentId: selectedAssignment,
+            courseId: selectedCourse,
+            fileName: file.name,
+            status: 'SUBMITTED',
+            submittedAt: new Date().toISOString(),
+            score: null
+        };
+        setSubmissions(prev => {
+            const existing = prev.findIndex(s => String(s.assignmentId) === String(selectedAssignment));
+            if (existing >= 0) {
+                const updated = [...prev];
+                updated[existing] = { ...updated[existing], ...newSubmission };
+                return updated;
+            }
+            return [...prev, newSubmission];
+        });
 
         // Step 2: Use OpenRouter AI to evaluate
         setEvaluating(true);
@@ -363,7 +382,10 @@ export default function AssignmentSubmission() {
                                         <ul>{feedback.suggestions.map((s, i) => <li key={i}>{s}</li>)}</ul>
                                     </div>
                                 </div>
-                                <button className="btn btn-primary" onClick={resetForm} style={{ marginTop: 16 }}><FiFileText size={14} style={{ marginRight: 4 }} /> Submit Another Assignment</button>
+                                <div style={{ display: 'flex', gap: 12, marginTop: 16, flexWrap: 'wrap' }}>
+                                    <button className="btn btn-primary" onClick={resetForm}><FiFileText size={14} style={{ marginRight: 4 }} /> Submit Another Assignment</button>
+                                    <button className="btn btn-secondary" onClick={() => navigate('/student/dashboard')}><FiArrowLeft size={14} style={{ marginRight: 4 }} /> Back to Dashboard</button>
+                                </div>
                             </>
                         )}
                     </div>
