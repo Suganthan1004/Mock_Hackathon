@@ -1,5 +1,5 @@
 import { useState, useEffect, Fragment } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { assignmentAPI } from '../services/api';
 import Sidebar from '../components/Sidebar';
@@ -26,6 +26,7 @@ const fallbackAssignments = [
 export default function StudentAssignments() {
     const { user } = useAuth();
     const navigate = useNavigate();
+    const location = useLocation();
     const [assignments, setAssignments] = useState(fallbackAssignments);
     const [loading, setLoading] = useState(true);
     const [filter, setFilter] = useState('all');
@@ -43,7 +44,7 @@ export default function StudentAssignments() {
             })
             .catch(err => console.error("API failed, using fallback:", err))
             .finally(() => setLoading(false));
-    }, [user]);
+    }, [user, location.key]);
 
     const filteredAssignments = assignments.filter(a => {
         const status = (a.status || 'pending').toLowerCase();

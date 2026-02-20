@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_BASE_URL = 'http://mock-hackathon.onrender.com/api';
+const API_BASE_URL = 'http://localhost:8081/api';
 
 const api = axios.create({
     baseURL: API_BASE_URL,
